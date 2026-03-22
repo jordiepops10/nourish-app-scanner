@@ -119,9 +119,9 @@ html,body{width:100%;height:100%;background:#FDF8F2;color:#1A1A2E;font-family:-a
 .cat-rows{width:100%}
 .cat-row{position:relative;overflow:hidden;border-bottom:1px solid #F5EFE6;background:#fff}
 .cat-row:last-child{border-bottom:none}
-.cat-row-inner{display:flex;align-items:flex-start;background:#fff;position:relative;z-index:1;will-change:transform;transition:transform 0.2s ease}
+.cat-row-inner{display:flex;align-items:center;background:#fff;position:relative;z-index:1;will-change:transform;transition:transform 0.2s ease}
 .cat-row-inner .cr-cell{padding:0.62rem 0.45rem;font-size:0.76rem;white-space:nowrap;flex-shrink:0}
-.cat-row-inner .cr-name{font-weight:700;color:#1A1A2E;white-space:normal;line-height:1.3;flex-shrink:1;padding-left:1rem;word-break:break-word}
+.cat-row-inner .cr-name{font-weight:700;color:#1A1A2E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;flex-shrink:1;padding-left:1rem}
 .cat-row-inner .cr-num{color:#9A8FA8;font-weight:600;padding-right:1rem}
 .cat-row-inner .cr-cal{font-weight:800;color:#1A1A2E}
 .cat-row-inner .cr-pro{color:#4A7CF6;font-weight:700}
@@ -278,10 +278,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 <div class="page hidden" id="page-catalog">
   <div class="ph">
     <div><div class="ph-title">Catalog</div></div>
-    <div style="display:flex;gap:0.4rem;align-items:center">
-      <button class="ph-btn" id="btn-cat-scan" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2M7 5h1M11 5h2M15 5h1M19 5h2M3 12h2M7 12h1M11 12h2M15 12h1M19 12h2M3 19h2M7 19h1M11 19h2M15 19h1M19 19h2M3 5v14M21 5v14"/></svg></button>
-      <button class="ph-btn-coral" id="btn-add-food">+ Add Food</button>
-    </div>
+    <button class="ph-btn-coral" id="btn-add-food">+ Add Food</button>
   </div>
   <div class="cat-top">
     <div class="search-wrap">
@@ -542,21 +539,6 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
   </div>
 </div>
 
-<!-- MODAL: MANAGE CATEGORY -->
-
-<div class="overlay" id="modal-managecat">
-  <div class="sheet">
-    <div class="handle"></div>
-    <div class="sheet-title" id="managecat-title">Manage Category</div>
-    <div class="field"><label class="lbl">Rename</label><input class="inp" id="managecat-name" type="text"></div>
-    <div class="modal-acts">
-      <button class="btn-s" id="managecat-cancel">Cancel</button>
-      <button class="btn-p" id="managecat-rename">Save Name</button>
-    </div>
-    <button id="managecat-delete" style="width:100%;margin-top:0.6rem;background:none;border:1.5px solid #E8533A;border-radius:30px;padding:0.75rem;font-family:inherit;font-size:0.85rem;font-weight:700;color:#E8533A;cursor:pointer">Delete Category</button>
-  </div>
-</div>
-
 <!-- MODAL: GOALS -->
 
 <div class="overlay" id="modal-goals">
@@ -586,9 +568,9 @@ var CK = 'nourish_cats_v4';
 
 // ─── DEFAULT DATA ────────────────────────────────────────────────────────────
 var DEFAULT_GOALS = { calories: 2005, protein: 165, carbs: 154, fat: 81 };
-var DEFAULT_MEALS = [];
-var DEFAULT_CATS  = [];
-var DOT_COLORS    = {};
+var DEFAULT_MEALS = ['Supplements','Breakfast','Lunch','Dinner','Snacks'];
+var DEFAULT_CATS  = ['Supplements','Breakfast','Lunch','Dinner','Snacks','Alcohol','Other'];
+var DOT_COLORS    = { Supplements:'#E8533A', Breakfast:'#F5A623', Lunch:'#4A7CF6', Dinner:'#27AE60', Snacks:'#9B59B6' };
 
 // ─── LOAD STATE ──────────────────────────────────────────────────────────────
 var data, goals, customCats;
@@ -1174,37 +1156,15 @@ function renderCatalog(q) {
   // Filter chips
   var fw   = document.getElementById('cat-filters');
   fw.innerHTML = '';
-  var allChips = ['All'].concat(getCats());
-  for (var ci=0; ci<allChips.length; ci++) {
+  var chips = ['All'].concat(getCats());
+  for (var ci=0; ci<chips.length; ci++) {
     (function(c) {
-      var isCustom = customCats.indexOf(c) !== -1;
-      if (isCustom) {
-        // Custom category: chip + manage button wrapped together
-        var wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex;align-items:center;gap:0;flex-shrink:0';
-        var chip = document.createElement('button');
-        chip.className = 'chip' + (_catFilter === c ? ' active' : '');
-        chip.style.borderRadius = '20px 0 0 20px';
-        chip.style.borderRight = 'none';
-        chip.textContent = c;
-        chip.addEventListener('click', function() { _catFilter = c; renderCatalog(); });
-        var manBtn = document.createElement('button');
-        manBtn.className = 'chip' + (_catFilter === c ? ' active' : '');
-        manBtn.style.borderRadius = '0 20px 20px 0';
-        manBtn.style.padding = '0.28rem 0.45rem';
-        manBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>';
-        manBtn.addEventListener('click', function() { openManageCat(c); });
-        wrap.appendChild(chip);
-        wrap.appendChild(manBtn);
-        fw.appendChild(wrap);
-      } else {
-        var chip2 = document.createElement('button');
-        chip2.className = 'chip' + (_catFilter === c ? ' active' : '');
-        chip2.textContent = c;
-        chip2.addEventListener('click', function() { _catFilter = c; renderCatalog(); });
-        fw.appendChild(chip2);
-      }
-    })(allChips[ci]);
+      var chip = document.createElement('button');
+      chip.className = 'chip' + (_catFilter === c ? ' active' : '');
+      chip.textContent = c;
+      chip.addEventListener('click', function() { _catFilter = c; renderCatalog(); });
+      fw.appendChild(chip);
+    })(chips[ci]);
   }
   // Add category button
   var addCatBtn = document.createElement('button');
@@ -1365,83 +1325,6 @@ document.getElementById('mf-save').addEventListener('click', function() {
 document.getElementById('mf-cancel').addEventListener('click', function() { closeModal('modal-food'); });
 
 // ─── ADD CATEGORY ─────────────────────────────────────────────────────────────
-// ─── MANAGE CATEGORY ─────────────────────────────────────────────────────────
-var _manageCatName = null;
-
-function openManageCat(name) {
-  _manageCatName = name;
-  document.getElementById('managecat-title').textContent = 'Manage: ' + name;
-  document.getElementById('managecat-name').value = name;
-  openModal('modal-managecat');
-}
-
-document.getElementById('managecat-cancel').addEventListener('click', function() {
-  closeModal('modal-managecat');
-});
-
-document.getElementById('managecat-rename').addEventListener('click', function() {
-  var newName = document.getElementById('managecat-name').value.trim();
-  if (!newName) { toast('Enter a name', 'err'); return; }
-  if (newName === _manageCatName) { closeModal('modal-managecat'); return; }
-  var existing = getCats();
-  for (var i=0; i<existing.length; i++) {
-    if (existing[i].toLowerCase() === newName.toLowerCase() && existing[i] !== _manageCatName) {
-      toast('Name already exists', 'err'); return;
-    }
-  }
-  // Rename in customCats
-  var idx = customCats.indexOf(_manageCatName);
-  if (idx !== -1) customCats[idx] = newName;
-  // Update catalog items that use this category
-  for (var ci=0; ci<data.catalog.length; ci++) {
-    if (data.catalog[ci].cat === _manageCatName) data.catalog[ci].cat = newName;
-  }
-  // Update filter selection if needed
-  if (_catFilter === _manageCatName) _catFilter = newName;
-  saveCats(); save();
-  closeModal('modal-managecat');
-  populateMealSelects(); populateCatSelect();
-  renderCatalog();
-  toast('Renamed to "' + newName + '"', 'ok');
-});
-
-document.getElementById('managecat-delete').addEventListener('click', function() {
-  var idx = customCats.indexOf(_manageCatName);
-  if (idx !== -1) customCats.splice(idx, 1);
-  // Move catalog items in this category to Other
-  for (var ci=0; ci<data.catalog.length; ci++) {
-    if (data.catalog[ci].cat === _manageCatName) data.catalog[ci].cat = 'Other';
-  }
-  if (_catFilter === _manageCatName) _catFilter = 'All';
-  saveCats(); save();
-  closeModal('modal-managecat');
-  populateMealSelects(); populateCatSelect();
-  renderCatalog();
-  toast('"' + _manageCatName + '" deleted', 'ok');
-});
-
-// Catalog scan button - opens scanner in catalog-save mode
-document.getElementById('btn-cat-scan').addEventListener('click', function() {
-  _scanMode = 'catalog';
-  _scannedFood = null;
-  document.getElementById('scan-result').style.display    = 'none';
-  document.getElementById('scan-notfound').style.display  = 'none';
-  document.getElementById('sr-qty').value = '1';
-  setScanStatus('Initializing...');
-  openModal('modal-scan');
-  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-    setScanStatus('Camera requires HTTPS. Deploy to Vercel to use scanning.', '#E8533A');
-    return;
-  }
-  if (_zxingLoaded) { startScanning(); return; }
-  setScanStatus('Loading scanner library...');
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js';
-  s.onload = function() { _zxingLoaded = true; startScanning(); };
-  s.onerror = function() { setScanStatus('Could not load scanner. Check your connection.', '#E8533A'); };
-  document.body.appendChild(s);
-});
-
 document.getElementById('newcat-save').addEventListener('click', function() {
   var name = document.getElementById('newcat-name').value.trim();
   if (!name) { toast('Enter a name', 'err'); return; }
@@ -1588,26 +1471,26 @@ function renderHistory() {
 function seed() {
   if (data.catalog.length > 0) return;
   data.catalog = [
-    { name:'Fish Oil',                         qty:2,   unit:'softgels', cat:'', cal:20,  fat:2,   carb:1,  pro:1,   notes:'' },
-    { name:'Nature Made Multivitamin Gummies',  qty:2,   unit:'gummies',  cat:'', cal:25,  fat:0,   carb:5,  pro:0,   notes:'' },
-    { name:'Nature Made ImmuneMAX Gummies',     qty:3,   unit:'gummies',  cat:'', cal:50,  fat:0,   carb:13, pro:0,   notes:'' },
-    { name:'Vital Proteins Collagen Peptides',  qty:1,   unit:'stick',    cat:'', cal:35,  fat:0,   carb:0,  pro:9,   notes:'' },
-    { name:'LMNT Drink Mix - Mango Chili',      qty:1,   unit:'stick',    cat:'', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'LMNT Sparkling Electrolyte',        qty:12,  unit:'oz',       cat:'', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'Fitaid - Fruit Punch',              qty:12,  unit:'oz',       cat:'', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'Pure Protein Shake - Almond Milk',  qty:1,   unit:'shake',    cat:'',   cal:150, fat:5,   carb:7,  pro:20,  notes:'' },
-    { name:'Perfect Bars - Mini Dark Choc',     qty:2,   unit:'bars',     cat:'',   cal:260, fat:16,  carb:18, pro:12,  notes:'' },
-    { name:'Eggo Protein Waffles - Choc Chip',  qty:2,   unit:'waffles',  cat:'',   cal:180, fat:6,   carb:22, pro:10,  notes:'' },
-    { name:'Chicken Breast',                    qty:4,   unit:'oz',       cat:'',       cal:140, fat:3,   carb:0,  pro:26,  notes:'' },
-    { name:'Brown Rice',                        qty:0.5, unit:'cup',      cat:'',       cal:108, fat:0.9, carb:22, pro:2.5, notes:'' },
-    { name:'Boneless Skinless Chicken Thigh',   qty:5.5, unit:'oz',       cat:'',      cal:220, fat:11,  carb:0,  pro:30,  notes:'' },
-    { name:'Goodles - Dreamy Creamy',           qty:75,  unit:'g',        cat:'',      cal:280, fat:5,   carb:46, pro:14,  notes:'' },
-    { name:'High Tide THC Drink',               qty:12,  unit:'oz',       cat:'',      cal:25,  fat:0,   carb:7,  pro:0,   notes:'' },
-    { name:'Bucked Up Carbonated Protein',      qty:16,  unit:'oz',       cat:'',      cal:100, fat:0,   carb:0,  pro:25,  notes:'' },
-    { name:'Oikos Pro Yogurt - Peach',          qty:1,   unit:'bottle',   cat:'',      cal:140, fat:1.5, carb:8,  pro:23,  notes:'' },
-    { name:'Power Crunch Protein Crisps',       qty:1,   unit:'can',      cat:'',      cal:320, fat:21,  carb:12, pro:22,  notes:'' },
-    { name:'Grapes',                            qty:21,  unit:'grapes',   cat:'',      cal:71,  fat:0,   carb:19, pro:1,   notes:'' },
-    { name:'Red Wine',                          qty:5,   unit:'oz',       cat:'',     cal:125, fat:0,   carb:4,  pro:0,   notes:'' }
+    { name:'Fish Oil',                         qty:2,   unit:'softgels', cat:'Supplements', cal:20,  fat:2,   carb:1,  pro:1,   notes:'' },
+    { name:'Nature Made Multivitamin Gummies',  qty:2,   unit:'gummies',  cat:'Supplements', cal:25,  fat:0,   carb:5,  pro:0,   notes:'' },
+    { name:'Nature Made ImmuneMAX Gummies',     qty:3,   unit:'gummies',  cat:'Supplements', cal:50,  fat:0,   carb:13, pro:0,   notes:'' },
+    { name:'Vital Proteins Collagen Peptides',  qty:1,   unit:'stick',    cat:'Supplements', cal:35,  fat:0,   carb:0,  pro:9,   notes:'' },
+    { name:'LMNT Drink Mix - Mango Chili',      qty:1,   unit:'stick',    cat:'Supplements', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
+    { name:'LMNT Sparkling Electrolyte',        qty:12,  unit:'oz',       cat:'Supplements', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
+    { name:'Fitaid - Fruit Punch',              qty:12,  unit:'oz',       cat:'Supplements', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
+    { name:'Pure Protein Shake - Almond Milk',  qty:1,   unit:'shake',    cat:'Breakfast',   cal:150, fat:5,   carb:7,  pro:20,  notes:'' },
+    { name:'Perfect Bars - Mini Dark Choc',     qty:2,   unit:'bars',     cat:'Breakfast',   cal:260, fat:16,  carb:18, pro:12,  notes:'' },
+    { name:'Eggo Protein Waffles - Choc Chip',  qty:2,   unit:'waffles',  cat:'Breakfast',   cal:180, fat:6,   carb:22, pro:10,  notes:'' },
+    { name:'Chicken Breast',                    qty:4,   unit:'oz',       cat:'Lunch',       cal:140, fat:3,   carb:0,  pro:26,  notes:'' },
+    { name:'Brown Rice',                        qty:0.5, unit:'cup',      cat:'Lunch',       cal:108, fat:0.9, carb:22, pro:2.5, notes:'' },
+    { name:'Boneless Skinless Chicken Thigh',   qty:5.5, unit:'oz',       cat:'Dinner',      cal:220, fat:11,  carb:0,  pro:30,  notes:'' },
+    { name:'Goodles - Dreamy Creamy',           qty:75,  unit:'g',        cat:'Dinner',      cal:280, fat:5,   carb:46, pro:14,  notes:'' },
+    { name:'High Tide THC Drink',               qty:12,  unit:'oz',       cat:'Snacks',      cal:25,  fat:0,   carb:7,  pro:0,   notes:'' },
+    { name:'Bucked Up Carbonated Protein',      qty:16,  unit:'oz',       cat:'Snacks',      cal:100, fat:0,   carb:0,  pro:25,  notes:'' },
+    { name:'Oikos Pro Yogurt - Peach',          qty:1,   unit:'bottle',   cat:'Snacks',      cal:140, fat:1.5, carb:8,  pro:23,  notes:'' },
+    { name:'Power Crunch Protein Crisps',       qty:1,   unit:'can',      cat:'Snacks',      cal:320, fat:21,  carb:12, pro:22,  notes:'' },
+    { name:'Grapes',                            qty:21,  unit:'grapes',   cat:'Snacks',      cal:71,  fat:0,   carb:19, pro:1,   notes:'' },
+    { name:'Red Wine',                          qty:5,   unit:'oz',       cat:'Alcohol',     cal:125, fat:0,   carb:4,  pro:0,   notes:'' }
   ];
   save();
 }
@@ -1762,20 +1645,20 @@ function buildScannedLogEntry(meal) {
 
 document.getElementById('sr-log-only').addEventListener('click', function() {
   if (!_scannedFood) return;
-  if (_scanMode === 'catalog') {
-    saveScannedToCatalog();
-    stopScanner(); closeModal('modal-scan'); renderCatalog();
-  } else {
-    getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
-    save();
-    stopScanner(); closeModal('modal-scan'); closeModal('modal-log');
-    renderToday(); toast('Added to log!', 'ok');
-    populateScanLogPreview();
-  }
+  getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
+  save();
+  stopScanner();
+  closeModal('modal-scan');
+  closeModal('modal-log');
+  renderToday();
+  toast('Added to log!', 'ok');
+  // Show preview in scan tab in case user reopens log modal
+  populateScanLogPreview();
 });
 
 document.getElementById('sr-save-and-log').addEventListener('click', function() {
   if (!_scannedFood) return;
+  // Check for duplicate in catalog
   var exists = false;
   for (var i = 0; i < data.catalog.length; i++) {
     if (data.catalog[i].name.toLowerCase() === _scannedFood.name.toLowerCase()) { exists = true; break; }
@@ -1783,20 +1666,18 @@ document.getElementById('sr-save-and-log').addEventListener('click', function() 
   if (!exists) {
     data.catalog.push({
       name: _scannedFood.name, qty: 1, unit: _scannedFood.servingSize,
-      cat: '', cal: _scannedFood.cal, fat: _scannedFood.fat,
+      cat: 'Other', cal: _scannedFood.cal, fat: _scannedFood.fat,
       carb: _scannedFood.carb, pro: _scannedFood.pro, notes: _scannedFood.brand
     });
-    save();
   }
-  if (_scanMode === 'catalog') {
-    stopScanner(); closeModal('modal-scan'); renderCatalog();
-    toast(exists ? 'Already in catalog' : 'Saved to catalog!', 'ok');
-  } else {
-    getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
-    save(); stopScanner(); closeModal('modal-scan'); closeModal('modal-log');
-    renderToday(); toast(exists ? 'Added to log!' : 'Saved to catalog + added!', 'ok');
-    populateScanLogPreview();
-  }
+  getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
+  save();
+  stopScanner();
+  closeModal('modal-scan');
+  closeModal('modal-log');
+  renderToday();
+  toast(exists ? 'Added to log!' : 'Saved to catalog + added!', 'ok');
+  populateScanLogPreview();
 });
 
 document.getElementById('sr-scan-again').addEventListener('click', function() {
