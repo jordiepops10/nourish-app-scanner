@@ -1758,28 +1758,7 @@ function renderHistory() {
 // ─── SEED DATA ───────────────────────────────────────────────────────────────
 function seed() {
   if (data.catalog.length > 0) return;
-  data.catalog = [
-    { name:'Fish Oil',                         qty:2,   unit:'softgels', cat:'Uncategorized', cal:20,  fat:2,   carb:1,  pro:1,   notes:'' },
-    { name:'Nature Made Multivitamin Gummies',  qty:2,   unit:'gummies',  cat:'Uncategorized', cal:25,  fat:0,   carb:5,  pro:0,   notes:'' },
-    { name:'Nature Made ImmuneMAX Gummies',     qty:3,   unit:'gummies',  cat:'Uncategorized', cal:50,  fat:0,   carb:13, pro:0,   notes:'' },
-    { name:'Vital Proteins Collagen Peptides',  qty:1,   unit:'stick',    cat:'Uncategorized', cal:35,  fat:0,   carb:0,  pro:9,   notes:'' },
-    { name:'LMNT Drink Mix - Mango Chili',      qty:1,   unit:'stick',    cat:'Uncategorized', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'LMNT Sparkling Electrolyte',        qty:12,  unit:'oz',       cat:'Uncategorized', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'Fitaid - Fruit Punch',              qty:12,  unit:'oz',       cat:'Uncategorized', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'Pure Protein Shake - Almond Milk',  qty:1,   unit:'shake',    cat:'Uncategorized',   cal:150, fat:5,   carb:7,  pro:20,  notes:'' },
-    { name:'Perfect Bars - Mini Dark Choc',     qty:2,   unit:'bars',     cat:'Uncategorized',   cal:260, fat:16,  carb:18, pro:12,  notes:'' },
-    { name:'Eggo Protein Waffles - Choc Chip',  qty:2,   unit:'waffles',  cat:'Uncategorized',   cal:180, fat:6,   carb:22, pro:10,  notes:'' },
-    { name:'Chicken Breast',                    qty:4,   unit:'oz',       cat:'Uncategorized',       cal:140, fat:3,   carb:0,  pro:26,  notes:'' },
-    { name:'Brown Rice',                        qty:0.5, unit:'cup',      cat:'Uncategorized',       cal:108, fat:0.9, carb:22, pro:2.5, notes:'' },
-    { name:'Boneless Skinless Chicken Thigh',   qty:5.5, unit:'oz',       cat:'Uncategorized',      cal:220, fat:11,  carb:0,  pro:30,  notes:'' },
-    { name:'Goodles - Dreamy Creamy',           qty:75,  unit:'g',        cat:'Uncategorized',      cal:280, fat:5,   carb:46, pro:14,  notes:'' },
-    { name:'High Tide THC Drink',               qty:12,  unit:'oz',       cat:'Uncategorized',      cal:25,  fat:0,   carb:7,  pro:0,   notes:'' },
-    { name:'Bucked Up Carbonated Protein',      qty:16,  unit:'oz',       cat:'Uncategorized',      cal:100, fat:0,   carb:0,  pro:25,  notes:'' },
-    { name:'Oikos Pro Yogurt - Peach',          qty:1,   unit:'bottle',   cat:'Uncategorized',      cal:140, fat:1.5, carb:8,  pro:23,  notes:'' },
-    { name:'Power Crunch Protein Crisps',       qty:1,   unit:'can',      cat:'Uncategorized',      cal:320, fat:21,  carb:12, pro:22,  notes:'' },
-    { name:'Grapes',                            qty:21,  unit:'grapes',   cat:'Uncategorized',      cal:71,  fat:0,   carb:19, pro:1,   notes:'' },
-    { name:'Red Wine',                          qty:5,   unit:'oz',       cat:'Uncategorized',     cal:125, fat:0,   carb:4,  pro:0,   notes:'' }
-  ];
+  data.catalog = [];
   save();
 }
 
