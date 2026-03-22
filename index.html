@@ -370,15 +370,18 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
     </div>
     <div id="pp-cat">
       <input class="inp" id="pl-search" type="text" placeholder="Search catalog..." style="margin-bottom:0.5rem">
-      <div class="plist" id="picker-list"></div>
-      <div class="field"><label class="lbl">Quantity (servings)</label><input class="inp" id="ml-qty" type="number" value="1" min="0.25" step="0.25"></div>
-      <div class="picker-preview" id="picker-preview">
-        <div class="pp-food-name" id="pp-name"></div>
-        <div class="pp-macros">
-          <div class="pp-macro m-cal"><div class="pp-macro-val" id="pp-cal">0</div><div class="pp-macro-lbl">Cal</div></div>
-          <div class="pp-macro m-pro"><div class="pp-macro-val" id="pp-pro">0g</div><div class="pp-macro-lbl">Protein</div></div>
-          <div class="pp-macro m-carb"><div class="pp-macro-val" id="pp-carb">0g</div><div class="pp-macro-lbl">Carbs</div></div>
-          <div class="pp-macro m-fat"><div class="pp-macro-val" id="pp-fat">0g</div><div class="pp-macro-lbl">Fat</div></div>
+      <div id="picker-cat-filters" style="display:flex;gap:0.35rem;overflow-x:auto;padding-bottom:0.5rem;margin-bottom:0.35rem"></div>
+      <div id="picker-list" style="max-height:220px;overflow-y:auto;margin-bottom:0.6rem"></div>
+      <!-- running total of selected items -->
+      <div id="picker-totals" style="display:none;background:#F5EFE6;border:1.5px solid #EDE5D8;border-radius:12px;padding:0.55rem 0.75rem;margin-bottom:0.6rem">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span id="picker-count-lbl" style="font-size:0.7rem;font-weight:800;color:#1A1A2E"></span>
+          <div style="display:flex;gap:0.75rem">
+            <span style="font-size:0.68rem;font-weight:700;color:#1A1A2E"><span id="pt-cal">0</span> cal</span>
+            <span style="font-size:0.68rem;font-weight:700;color:#4A7CF6">P<span id="pt-pro">0</span>g</span>
+            <span style="font-size:0.68rem;font-weight:700;color:#F5A623">C<span id="pt-carb">0</span>g</span>
+            <span style="font-size:0.68rem;font-weight:700;color:#27AE60">F<span id="pt-fat">0</span>g</span>
+          </div>
         </div>
       </div>
     </div>
@@ -853,21 +856,42 @@ document.getElementById('el-save').addEventListener('click', function() {
 document.getElementById('el-cancel').addEventListener('click', function() { closeModal('modal-edit-log'); });
 
 // ─── ADD TO LOG ──────────────────────────────────────────────────────────────
-var _selIdx = null;
+// _selected: { catalogIndex: quantity, ... }
+var _selected = {};
+var _pickerCatFilter = 'All';
+
+function renderPickerCatFilters() {
+  var fw = document.getElementById('picker-cat-filters');
+  fw.innerHTML = '';
+  var cats = ['All'].concat(getCats());
+  for (var i = 0; i < cats.length; i++) {
+    (function(c) {
+      var chip = document.createElement('button');
+      chip.textContent = c;
+      chip.style.cssText = 'flex-shrink:0;background:' + (_pickerCatFilter === c ? '#E8533A' : '#fff') + ';color:' + (_pickerCatFilter === c ? '#fff' : '#9A8FA8') + ';border:1.5px solid ' + (_pickerCatFilter === c ? '#E8533A' : '#EDE5D8') + ';border-radius:20px;padding:0.25rem 0.65rem;font-size:0.65rem;font-weight:700;cursor:pointer;font-family:inherit';
+      chip.addEventListener('click', function() {
+        _pickerCatFilter = c;
+        renderPickerCatFilters();
+        renderPickerList(document.getElementById('pl-search').value);
+      });
+      fw.appendChild(chip);
+    })(cats[i]);
+  }
+}
 
 function openLogModal(meal) {
-  _selIdx = null;
+  _selected = {};
+  _pickerCatFilter = 'All';
   populateMealSelects();
-  document.getElementById('ml-meal').value = meal;
-  document.getElementById('ml-qty').value  = '1';
-  document.getElementById('pl-search').value = '';
-  document.getElementById('mc-name').value  = '';
-  document.getElementById('mc-cal').value   = '';
-  document.getElementById('mc-fat').value   = '';
-  document.getElementById('mc-carb').value  = '';
-  document.getElementById('mc-pro').value   = '';
-  document.getElementById('picker-preview').classList.remove('visible');
+  document.getElementById('ml-meal').value    = meal;
+  document.getElementById('pl-search').value  = '';
+  document.getElementById('mc-name').value    = '';
+  document.getElementById('mc-cal').value     = '';
+  document.getElementById('mc-fat').value     = '';
+  document.getElementById('mc-carb').value    = '';
+  document.getElementById('mc-pro').value     = '';
   switchTab('cat');
+  renderPickerCatFilters();
   renderPickerList('');
   openModal('modal-log');
 }
@@ -879,7 +903,6 @@ function switchTab(tab) {
   document.getElementById('pp-cat').style.display    = tab === 'cat'    ? '' : 'none';
   document.getElementById('pp-custom').style.display = tab === 'custom' ? '' : 'none';
   document.getElementById('pp-scan').style.display   = tab === 'scan'   ? '' : 'none';
-  if (tab !== 'cat') document.getElementById('picker-preview').classList.remove('visible');
 }
 
 document.getElementById('pt-cat').addEventListener('click',    function() { switchTab('cat'); });
@@ -891,57 +914,129 @@ function renderPickerList(q) {
   var list = document.getElementById('picker-list');
   list.innerHTML = '';
   var filtered = [];
-  for (var i=0; i<data.catalog.length; i++) {
-    if (data.catalog[i].name.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
-      filtered.push({ food: data.catalog[i], idx: i });
-    }
+  for (var i = 0; i < data.catalog.length; i++) {
+    var f = data.catalog[i];
+    if (f.name.toLowerCase().indexOf(q.toLowerCase()) === -1) continue;
+    if (_pickerCatFilter !== 'All' && f.cat !== _pickerCatFilter) continue;
+    filtered.push({ food: f, idx: i });
   }
   if (filtered.length === 0) {
     list.innerHTML = '<div style="text-align:center;padding:1.5rem;color:#9A8FA8;font-size:0.78rem">' +
       (data.catalog.length === 0 ? 'Catalog empty. Add foods in the Catalog tab.' : 'No results.') + '</div>';
+    updatePickerTotals();
     return;
   }
-  for (var j=0; j<filtered.length; j++) {
+  for (var j = 0; j < filtered.length; j++) {
     (function(f, idx) {
-      var el = document.createElement('div');
-      el.className = 'pitem' + (_selIdx === idx ? ' sel' : '');
-      el.innerHTML =
-        '<div>' +
-          '<div class="pitem-name">' + f.name + '</div>' +
-          '<div class="pitem-sub">' + f.qty + ' ' + f.unit + ' \u00b7 P' + f.pro + 'g C' + f.carb + 'g F' + f.fat + 'g</div>' +
-        '</div>' +
-        '<div class="pitem-cal">' + f.cal + ' kcal</div>';
-      el.addEventListener('click', function() {
-        _selIdx = idx;
-        renderPickerList(document.getElementById('pl-search').value);
-        updatePickerPreview();
+      var isChecked = _selected.hasOwnProperty(idx);
+      var qty = isChecked ? _selected[idx] : 1;
+
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.5rem;border-bottom:1px solid #F5EFE6';
+
+      // Checkbox
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = isChecked;
+      cb.style.cssText = 'width:20px;height:20px;accent-color:#E8533A;flex-shrink:0;cursor:pointer';
+
+      // Food info
+      var info = document.createElement('div');
+      info.style.cssText = 'flex:1;min-width:0;cursor:pointer';
+      info.innerHTML =
+        '<div style="font-size:0.82rem;font-weight:700;color:#1A1A2E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + f.name + '</div>' +
+        '<div style="font-size:0.6rem;color:#9A8FA8;margin-top:1px">' + f.cal + ' kcal \u00b7 ' + f.qty + f.unit + '</div>';
+
+      // Qty input
+      var qtyInp = document.createElement('input');
+      qtyInp.type = 'number';
+      qtyInp.value = qty;
+      qtyInp.min = '0.25';
+      qtyInp.step = '0.25';
+      qtyInp.style.cssText = 'width:52px;background:#F5EFE6;border:1.5px solid #EDE5D8;border-radius:8px;padding:0.3rem 0.4rem;font-size:0.78rem;font-weight:700;font-family:inherit;color:#1A1A2E;text-align:center;outline:none;-webkit-appearance:none';
+      if (!isChecked) qtyInp.style.opacity = '0.35';
+
+      // Toggle check on row/info click
+      function toggle() {
+        cb.checked = !cb.checked;
+        if (cb.checked) {
+          _selected[idx] = parseFloat(qtyInp.value) || 1;
+          qtyInp.style.opacity = '1';
+        } else {
+          delete _selected[idx];
+          qtyInp.style.opacity = '0.35';
+        }
+        updatePickerTotals();
+      }
+      cb.addEventListener('change', function() {
+        if (cb.checked) {
+          _selected[idx] = parseFloat(qtyInp.value) || 1;
+          qtyInp.style.opacity = '1';
+        } else {
+          delete _selected[idx];
+          qtyInp.style.opacity = '0.35';
+        }
+        updatePickerTotals();
       });
-      list.appendChild(el);
+      info.addEventListener('click', toggle);
+
+      // Update qty when changed
+      qtyInp.addEventListener('change', function() {
+        if (cb.checked) {
+          _selected[idx] = parseFloat(qtyInp.value) || 1;
+          updatePickerTotals();
+        }
+      });
+      // Prevent qty tap from toggling the row
+      qtyInp.addEventListener('click', function(e) { e.stopPropagation(); });
+
+      row.appendChild(cb);
+      row.appendChild(info);
+      row.appendChild(qtyInp);
+      list.appendChild(row);
     })(filtered[j].food, filtered[j].idx);
   }
+  updatePickerTotals();
 }
 
-function updatePickerPreview() {
-  var preview = document.getElementById('picker-preview');
-  if (_selIdx === null) { preview.classList.remove('visible'); return; }
-  var food = data.catalog[_selIdx];
-  if (!food) { preview.classList.remove('visible'); return; }
-  var qty = parseFloat(document.getElementById('ml-qty').value) || 1;
-  preview.classList.add('visible');
-  document.getElementById('pp-name').textContent  = food.name;
-  document.getElementById('pp-cal').textContent   = fmt(food.cal * qty);
-  document.getElementById('pp-pro').textContent   = fmtG(food.pro * qty);
-  document.getElementById('pp-carb').textContent  = fmtG(food.carb * qty);
-  document.getElementById('pp-fat').textContent   = fmtG(food.fat * qty);
+function updatePickerTotals() {
+  var keys = Object.keys(_selected);
+  var totalsEl = document.getElementById('picker-totals');
+  var btn = document.getElementById('ml-save');
+  if (keys.length === 0) {
+    totalsEl.style.display = 'none';
+    btn.textContent = 'Add to Log';
+    return;
+  }
+  totalsEl.style.display = 'block';
+  var cal = 0, pro = 0, carb = 0, fat = 0;
+  for (var i = 0; i < keys.length; i++) {
+    var idx = parseInt(keys[i]);
+    var food = data.catalog[idx];
+    var qty  = _selected[idx];
+    if (food) {
+      cal  += food.cal  * qty;
+      pro  += food.pro  * qty;
+      carb += food.carb * qty;
+      fat  += food.fat  * qty;
+    }
+  }
+  document.getElementById('picker-count-lbl').textContent = keys.length + ' item' + (keys.length !== 1 ? 's' : '') + ' selected';
+  document.getElementById('pt-cal').textContent  = Math.round(cal);
+  document.getElementById('pt-pro').textContent  = Math.round(pro);
+  document.getElementById('pt-carb').textContent = Math.round(carb);
+  document.getElementById('pt-fat').textContent  = Math.round(fat);
+  btn.textContent = 'Add ' + keys.length + ' Item' + (keys.length !== 1 ? 's' : '') + ' to Log';
 }
 
 document.getElementById('pl-search').addEventListener('input', function() { renderPickerList(this.value); });
-document.getElementById('ml-qty').addEventListener('input', updatePickerPreview);
 
 document.getElementById('ml-save').addEventListener('click', function() {
   var isCustom = document.getElementById('pt-custom').classList.contains('active');
+  var isScan   = document.getElementById('pt-scan').classList.contains('active');
   var meal = document.getElementById('ml-meal').value;
   var day  = getDay(viewingDate);
+
   if (isCustom) {
     var name = document.getElementById('mc-name').value.trim();
     if (!name) { toast('Enter a name', 'err'); return; }
@@ -953,23 +1048,35 @@ document.getElementById('ml-save').addEventListener('click', function() {
       pro:  parseFloat(document.getElementById('mc-pro').value)  || 0,
       servingLabel: 'Custom entry', _qty: 1, _base: null
     });
+  } else if (isScan) {
+    // Handled by scanner buttons — do nothing here
+    toast('Use the scan result buttons to add', 'err');
+    return;
   } else {
-    if (_selIdx === null) { toast('Select a food', 'err'); return; }
-    var food = data.catalog[_selIdx];
-    var qty  = parseFloat(document.getElementById('ml-qty').value) || 1;
-    var base = { cal: food.cal, pro: food.pro, carb: food.carb, fat: food.fat };
-    day.log.push({
-      meal: meal, name: food.name,
-      cal:  food.cal  * qty, pro:  food.pro  * qty,
-      carb: food.carb * qty, fat:  food.fat  * qty,
-      servingLabel: qty + ' \u00d7 ' + food.qty + food.unit,
-      _qty: qty, _base: base, _servingDesc: food.qty + food.unit
-    });
+    // Multi-select catalog
+    var keys = Object.keys(_selected);
+    if (keys.length === 0) { toast('Select at least one food', 'err'); return; }
+    for (var i = 0; i < keys.length; i++) {
+      var idx  = parseInt(keys[i]);
+      var food = data.catalog[idx];
+      var qty  = _selected[idx];
+      if (!food) continue;
+      var base = { cal: food.cal, pro: food.pro, carb: food.carb, fat: food.fat };
+      day.log.push({
+        meal: meal, name: food.name,
+        cal:  food.cal  * qty, pro:  food.pro  * qty,
+        carb: food.carb * qty, fat:  food.fat  * qty,
+        servingLabel: qty + ' \u00d7 ' + food.qty + food.unit,
+        _qty: qty, _base: base, _servingDesc: food.qty + food.unit
+      });
+    }
   }
   save();
   closeModal('modal-log');
   renderToday();
-  toast('Added!', 'ok');
+  var count = Object.keys(_selected).length;
+  toast(isCustom ? 'Added!' : 'Added ' + count + ' item' + (count !== 1 ? 's' : '') + '!', 'ok');
+  _selected = {};
 });
 
 document.getElementById('ml-cancel').addEventListener('click', function() { closeModal('modal-log'); });
