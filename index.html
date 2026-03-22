@@ -23,10 +23,11 @@ html,body{width:100%;height:100%;background:#FDF8F2;color:#1A1A2E;font-family:-a
 /* NAV */
 .bnav-wrap{flex-shrink:0;padding:0.5rem 1rem;padding-bottom:calc(0.5rem + env(safe-area-inset-bottom,0px));background:#FDF8F2}
 .bnav{display:flex;background:#fff;border-radius:30px;box-shadow:0 2px 16px rgba(26,26,46,0.1);padding:0.3rem;gap:0.2rem}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0.45rem 0.3rem;background:none;border:none;border-radius:22px;cursor:pointer;transition:background 0.15s}
-.bnav-btn.active{background:#E8533A}
-.bnav-icon{font-size:1.1rem;line-height:1}
-.bnav-label{font-size:0.6rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#9A8FA8}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0.5rem 0.3rem;background:none;border:none;border-radius:22px;cursor:pointer;transition:background 0.15s}
+.bnav-btn.active{background:#1A1A2E}
+.bnav-icon{width:22px;height:22px;display:block}
+.bnav-icon svg{width:22px;height:22px;display:block}
+.bnav-label{font-size:0.58rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#9A8FA8;transition:color 0.15s}
 .bnav-btn.active .bnav-label{color:#fff}
 
 /* PAGE HEADER */
@@ -305,9 +306,36 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 
   <div class="bnav-wrap">
     <nav class="bnav">
-      <button class="bnav-btn active" id="bnav-today" data-page="today"><span class="bnav-icon">&#9673;</span><span class="bnav-label">Today</span></button>
-      <button class="bnav-btn" id="bnav-catalog" data-page="catalog"><span class="bnav-icon">&#8862;</span><span class="bnav-label">Catalog</span></button>
-      <button class="bnav-btn" id="bnav-history" data-page="history"><span class="bnav-icon">&#9672;</span><span class="bnav-label">History</span></button>
+      <button class="bnav-btn active" id="bnav-today" data-page="today">
+        <span class="bnav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9A8FA8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="nav-svg" id="svg-today">
+            <path d="M3 12L12 4l9 8"/>
+            <path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/>
+          </svg>
+        </span>
+        <span class="bnav-label">Today</span>
+      </button>
+      <button class="bnav-btn" id="bnav-catalog" data-page="catalog">
+        <span class="bnav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9A8FA8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="nav-svg" id="svg-catalog">
+            <rect x="3" y="5" width="4" height="4" rx="0.5"/>
+            <line x1="9" y1="7" x2="21" y2="7"/>
+            <rect x="3" y="11" width="4" height="4" rx="0.5"/>
+            <line x1="9" y1="13" x2="21" y2="13"/>
+            <rect x="3" y="17" width="4" height="4" rx="0.5"/>
+            <line x1="9" y1="19" x2="21" y2="19"/>
+          </svg>
+        </span>
+        <span class="bnav-label">Catalog</span>
+      </button>
+      <button class="bnav-btn" id="bnav-history" data-page="history">
+        <span class="bnav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9A8FA8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="nav-svg" id="svg-history">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </span>
+        <span class="bnav-label">History</span>
+      </button>
     </nav>
   </div>
 </div>
@@ -637,6 +665,9 @@ function showPage(name) {
   for (var i=0; i<pages.length; i++) {
     document.getElementById('page-'+pages[i]).classList.toggle('hidden', pages[i] !== name);
     document.getElementById('bnav-'+pages[i]).classList.toggle('active', pages[i] === name);
+    // Switch SVG stroke: white when active, muted when inactive
+    var svg = document.getElementById('svg-'+pages[i]);
+    if (svg) svg.setAttribute('stroke', pages[i] === name ? '#ffffff' : '#9A8FA8');
   }
   if (name === 'today')   renderToday();
   if (name === 'catalog') renderCatalog();
