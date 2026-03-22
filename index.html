@@ -249,7 +249,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
   </div>
   <div class="burned-row">
     <div class="burned-left">
-      <span>&#128293;</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       <div>
         <div class="burned-label">Calories Burned</div>
         <div class="burned-val" id="burned-display">0 kcal</div>
@@ -396,7 +396,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
     <div class="ptabs">
       <button class="ptab active" id="pt-cat">From Catalog</button>
       <button class="ptab" id="pt-custom">Custom Entry</button>
-      <button class="ptab" id="pt-scan">&#128247; Scan</button>
+      <button class="ptab" id="pt-scan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M3 5h2M7 5h1M11 5h2M15 5h1M19 5h2M3 12h2M7 12h1M11 12h2M15 12h1M19 12h2M3 19h2M7 19h1M11 19h2M15 19h1M19 19h2M3 5v14M21 5v14"/></svg>Scan</button>
     </div>
     <div id="pp-scan" style="display:none">
       <button id="btn-open-scanner" style="width:100%;background:#1A1A2E;color:#fff;border:none;border-radius:30px;padding:0.85rem;font-family:inherit;font-size:0.85rem;font-weight:800;cursor:pointer;margin-bottom:0.75rem">Open Camera Scanner</button>
@@ -1255,10 +1255,10 @@ function renderCatalog(q) {
     inner.className = 'cat-row-inner';
     inner.innerHTML =
       '<div class="cr-cell cr-name" style="width:' + colWidths[0] + '">' + food.name + '</div>' +
-      '<div class="cr-cell cr-cal"  style="width:' + colWidths[1] + '">' + food.cal + '</div>' +
-      '<div class="cr-cell cr-pro"  style="width:' + colWidths[2] + '">' + food.pro + 'g</div>' +
-      '<div class="cr-cell cr-carb" style="width:' + colWidths[3] + '">' + food.carb + 'g</div>' +
-      '<div class="cr-cell cr-fat"  style="width:' + colWidths[4] + '">' + food.fat + 'g</div>' +
+      '<div class="cr-cell cr-cal"  style="width:' + colWidths[1] + '">' + Math.round(food.cal) + '</div>' +
+      '<div class="cr-cell cr-pro"  style="width:' + colWidths[2] + '">' + Math.round(food.pro) + 'g</div>' +
+      '<div class="cr-cell cr-carb" style="width:' + colWidths[3] + '">' + Math.round(food.carb) + 'g</div>' +
+      '<div class="cr-cell cr-fat"  style="width:' + colWidths[4] + '">' + Math.round(food.fat) + 'g</div>' +
       '<div class="cr-cell cr-num"  style="width:' + colWidths[5] + '">' + food.qty + '<span style="color:#C8BFCE;font-size:0.65em"> ' + food.unit + '</span></div>';
     rowDiv.appendChild(inner);
     catRowsDiv.appendChild(rowDiv);
