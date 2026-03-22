@@ -631,7 +631,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 var SK = 'nourish_v4';
 var GK = 'nourish_goals_v4';
 var CK = 'nourish_cats_v4';
-var MK = 'nourish_meals_v1';
+var MK = 'nourish_meals_v2';
 
 // ─── DEFAULT DATA ────────────────────────────────────────────────────────────
 var DEFAULT_GOALS = { calories: 2005, protein: 165, carbs: 154, fat: 81 };
@@ -640,18 +640,18 @@ var DEFAULT_CATS  = ['Uncategorized'];
 var DOT_COLORS    = {};
 
 // ─── LOAD STATE ──────────────────────────────────────────────────────────────
-var data, goals, customCats, customMeals;
+var data, goals, customCats, orderedMeals;
 try { data = JSON.parse(localStorage.getItem(SK)) || { catalog:[], days:{} }; } catch(e) { data = { catalog:[], days:{} }; }
 try { goals = JSON.parse(localStorage.getItem(GK)) || DEFAULT_GOALS; } catch(e) { goals = DEFAULT_GOALS; }
 try { customCats = JSON.parse(localStorage.getItem(CK)) || []; } catch(e) { customCats = []; }
-try { customMeals = JSON.parse(localStorage.getItem(MK)) || []; } catch(e) { customMeals = []; }
+try { orderedMeals = JSON.parse(localStorage.getItem(MK)); if (!orderedMeals || !orderedMeals.length) orderedMeals = DEFAULT_MEALS.slice(); } catch(e) { orderedMeals = DEFAULT_MEALS.slice(); }
 
-function getMeals() { return DEFAULT_MEALS.concat(customMeals); }
+function getMeals() { return orderedMeals; }
 function getCats()  { return DEFAULT_CATS.concat(customCats); }
 function save()      { try { localStorage.setItem(SK, JSON.stringify(data)); } catch(e) {} }
 function saveGoals() { try { localStorage.setItem(GK, JSON.stringify(goals)); } catch(e) {} }
 function saveCats()  { try { localStorage.setItem(CK, JSON.stringify(customCats)); } catch(e) {} }
-function saveMeals() { try { localStorage.setItem(MK, JSON.stringify(customMeals)); } catch(e) {} }
+function saveMeals() { try { localStorage.setItem(MK, JSON.stringify(orderedMeals)); } catch(e) {} }
 
 // ─── DATE HELPERS ────────────────────────────────────────────────────────────
 function dateKey(d) { return d.toISOString().slice(0,10); }
@@ -1449,28 +1449,66 @@ function renderMealListMgr() {
   mgr.innerHTML = '';
   var meals = getMeals();
   for (var i=0; i<meals.length; i++) {
-    (function(m) {
+    (function(m, idx) {
       var isDefault = DEFAULT_MEALS.indexOf(m) !== -1;
       var row = document.createElement('div');
-      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #F5EFE6';
+      row.style.cssText = 'display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0;border-bottom:1px solid #F5EFE6';
+
+      // Up/down arrows
+      var upBtn = document.createElement('button');
+      upBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>';
+      upBtn.style.cssText = 'background:none;border:1.5px solid #EDE5D8;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#9A8FA8;flex-shrink:0';
+      upBtn.disabled = (idx === 0);
+      if (idx === 0) upBtn.style.opacity = '0.25';
+      upBtn.addEventListener('click', function() {
+        var tmp = orderedMeals[idx];
+        orderedMeals[idx] = orderedMeals[idx-1];
+        orderedMeals[idx-1] = tmp;
+        saveMeals();
+        populateMealSelects();
+        renderMealListMgr();
+        renderToday();
+      });
+
+      var downBtn = document.createElement('button');
+      downBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+      downBtn.style.cssText = 'background:none;border:1.5px solid #EDE5D8;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#9A8FA8;flex-shrink:0';
+      downBtn.disabled = (idx === meals.length - 1);
+      if (idx === meals.length - 1) downBtn.style.opacity = '0.25';
+      downBtn.addEventListener('click', function() {
+        var tmp = orderedMeals[idx];
+        orderedMeals[idx] = orderedMeals[idx+1];
+        orderedMeals[idx+1] = tmp;
+        saveMeals();
+        populateMealSelects();
+        renderMealListMgr();
+        renderToday();
+      });
+
+      // Label
       var lbl = document.createElement('span');
-      lbl.style.cssText = 'font-size:0.82rem;font-weight:600;color:#1A1A2E';
+      lbl.style.cssText = 'font-size:0.82rem;font-weight:600;color:#1A1A2E;flex:1';
       lbl.textContent = m;
+
+      row.appendChild(upBtn);
+      row.appendChild(downBtn);
       row.appendChild(lbl);
+
+      // Manage button for non-defaults
       if (!isDefault) {
         var manBtn = document.createElement('button');
-        manBtn.style.cssText = 'background:none;border:1.5px solid #EDE5D8;border-radius:8px;padding:0.2rem 0.5rem;font-size:0.7rem;font-weight:700;color:#9A8FA8;cursor:pointer;font-family:inherit';
+        manBtn.style.cssText = 'background:none;border:1.5px solid #EDE5D8;border-radius:8px;padding:0.2rem 0.5rem;font-size:0.7rem;font-weight:700;color:#9A8FA8;cursor:pointer;font-family:inherit;flex-shrink:0';
         manBtn.textContent = '...';
         manBtn.addEventListener('click', function() { openManageMeal(m); });
         row.appendChild(manBtn);
       } else {
         var def = document.createElement('span');
-        def.style.cssText = 'font-size:0.62rem;color:#C8BFCE;font-weight:600';
+        def.style.cssText = 'font-size:0.62rem;color:#C8BFCE;font-weight:600;flex-shrink:0';
         def.textContent = 'default';
         row.appendChild(def);
       }
       mgr.appendChild(row);
-    })(meals[i]);
+    })(meals[i], i);
   }
 }
 
@@ -1495,7 +1533,7 @@ document.getElementById('newmeal-save').addEventListener('click', function() {
   for (var i=0; i<all.length; i++) {
     if (all[i].toLowerCase() === name.toLowerCase()) { toast('Already exists', 'err'); return; }
   }
-  customMeals.push(name);
+  orderedMeals.push(name);
   saveMeals();
   closeModal('modal-addmeal');
   populateMealSelects();
@@ -1516,8 +1554,8 @@ document.getElementById('managemeal-rename').addEventListener('click', function(
       toast('Already exists', 'err'); return;
     }
   }
-  var idx = customMeals.indexOf(_manageMealName);
-  if (idx !== -1) customMeals[idx] = newName;
+  var idx = orderedMeals.indexOf(_manageMealName);
+  if (idx !== -1) orderedMeals[idx] = newName;
   var dayKeys = Object.keys(data.days);
   for (var di=0; di<dayKeys.length; di++) {
     var log = data.days[dayKeys[di]].log || [];
@@ -1532,8 +1570,8 @@ document.getElementById('managemeal-rename').addEventListener('click', function(
 });
 
 document.getElementById('managemeal-delete').addEventListener('click', function() {
-  var idx = customMeals.indexOf(_manageMealName);
-  if (idx !== -1) customMeals.splice(idx, 1);
+  var idx = orderedMeals.indexOf(_manageMealName);
+  if (idx !== -1) orderedMeals.splice(idx, 1);
   var dayKeys = Object.keys(data.days);
   for (var di=0; di<dayKeys.length; di++) {
     var log = data.days[dayKeys[di]].log || [];
