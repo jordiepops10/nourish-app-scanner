@@ -289,9 +289,10 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 <div class="page hidden" id="page-catalog">
   <div class="ph">
     <div><div class="ph-title">Catalog</div></div>
-    <div style="display:flex;gap:0.4rem;align-items:center">
-      <button class="ph-btn" id="btn-cat-scan" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2M7 5h1M11 5h2M15 5h1M19 5h2M3 12h2M7 12h1M11 12h2M15 12h1M19 12h2M3 19h2M7 19h1M11 19h2M15 19h1M19 19h2M3 5v14M21 5v14"/></svg></button>
-      <button class="ph-btn-coral" id="btn-add-food">+ Add Food</button>
+    <div style="display:flex;gap:0.35rem;align-items:center">
+      <button class="ph-btn" id="btn-cat-search" title="Search database"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="ph-btn" id="btn-cat-scan" title="Scan barcode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2M7 5h1M11 5h2M15 5h1M19 5h2M3 12h2M7 12h1M11 12h2M15 12h1M19 12h2M3 19h2M7 19h1M11 19h2M15 19h1M19 19h2M3 5v14M21 5v14"/></svg></button>
+      <button class="ph-btn-coral" id="btn-add-food">+ Add</button>
     </div>
   </div>
   <div class="cat-top">
@@ -410,6 +411,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
     <div class="ptabs">
       <button class="ptab active" id="pt-cat">From Catalog</button>
       <button class="ptab" id="pt-custom">Custom Entry</button>
+      <button class="ptab" id="pt-search">Search</button>
       <button class="ptab" id="pt-scan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M3 5h2M7 5h1M11 5h2M15 5h1M19 5h2M3 12h2M7 12h1M11 12h2M15 12h1M19 12h2M3 19h2M7 19h1M11 19h2M15 19h1M19 19h2M3 5v14M21 5v14"/></svg>Scan</button>
     </div>
     <div id="pp-scan" style="display:none">
@@ -429,6 +431,13 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
         </div>
       </div>
       <p style="font-size:0.72rem;color:#9A8FA8;text-align:center" id="scan-log-hint">Tap the button above to scan a barcode.</p>
+    </div>
+    <div id="pp-search" style="display:none">
+      <div style="display:flex;gap:0.4rem;margin-bottom:0.6rem">
+        <input class="inp" id="food-search-inp" type="text" placeholder="e.g. Greek yogurt, chicken breast..." style="flex:1">
+        <button id="food-search-btn" style="background:#E8533A;color:#fff;border:none;border-radius:12px;padding:0 0.85rem;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;flex-shrink:0">Search</button>
+      </div>
+      <div id="food-search-results" style="max-height:260px;overflow-y:auto"></div>
     </div>
     <div id="pp-cat">
       <input class="inp" id="pl-search" type="text" placeholder="Search catalog..." style="margin-bottom:0.5rem">
@@ -536,6 +545,48 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
       <button id="sr-to-custom" style="background:#fff;border:1.5px solid #EDE5D8;border-radius:12px;padding:0.45rem 1rem;font-family:inherit;font-size:0.75rem;font-weight:700;color:#3A3650;cursor:pointer">Enter Manually</button>
     </div>
     <button id="scan-close" style="width:100%;background:none;border:none;color:#9A8FA8;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;padding:0.5rem;margin-top:0.25rem">Cancel</button>
+  </div>
+</div>
+
+<!-- MODAL: FOOD REVIEW / EDIT BEFORE ADDING -->
+
+<div class="overlay" id="modal-food-review">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="sheet-title" id="fr-title">Review &amp; Edit</div>
+    <div style="font-size:0.7rem;color:#9A8FA8;margin-bottom:0.75rem" id="fr-source"></div>
+    <div class="field"><label class="lbl">Food Name</label><input class="inp" id="fr-name" type="text"></div>
+    <div class="f2">
+      <div class="field"><label class="lbl">Serving Size</label><input class="inp" id="fr-serving" type="text" placeholder="e.g. 1 cup"></div>
+      <div class="field"><label class="lbl">Servings</label><input class="inp" id="fr-qty" type="number" value="1" min="0.25" step="0.25"></div>
+    </div>
+    <div class="field"><label class="lbl">Calories (per serving)</label><input class="inp" id="fr-cal" type="number" placeholder="0"></div>
+    <div class="f3">
+      <div class="field"><label class="lbl">Protein (g)</label><input class="inp" id="fr-pro" type="number" placeholder="0"></div>
+      <div class="field"><label class="lbl">Carbs (g)</label><input class="inp" id="fr-carb" type="number" placeholder="0"></div>
+      <div class="field"><label class="lbl">Fat (g)</label><input class="inp" id="fr-fat" type="number" placeholder="0"></div>
+    </div>
+    <div class="modal-acts" id="fr-acts-log" style="margin-top:1rem">
+      <button class="btn-s" id="fr-cancel">Cancel</button>
+      <button class="btn-p" id="fr-add-log">Add to Log</button>
+    </div>
+    <button id="fr-save-catalog" style="width:100%;margin-top:0.5rem;background:#1A1A2E;color:#fff;border:none;border-radius:30px;padding:0.72rem;font-family:inherit;font-size:0.82rem;font-weight:800;cursor:pointer">Save to Catalog + Add to Log</button>
+    <button id="fr-catalog-only" style="width:100%;margin-top:0.5rem;background:#fff;color:#3A3650;border:1.5px solid #EDE5D8;border-radius:30px;padding:0.72rem;font-family:inherit;font-size:0.82rem;font-weight:700;cursor:pointer">Save to Catalog Only</button>
+  </div>
+</div>
+
+<!-- MODAL: CATALOG SEARCH -->
+
+<div class="overlay" id="modal-cat-search">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="sheet-title">Search Food Database</div>
+    <div style="display:flex;gap:0.4rem;margin-bottom:0.6rem">
+      <input class="inp" id="cat-search-db-inp" type="text" placeholder="e.g. Greek yogurt, chicken..." style="flex:1">
+      <button id="cat-search-db-btn" style="background:#E8533A;color:#fff;border:none;border-radius:12px;padding:0 0.85rem;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;flex-shrink:0">Search</button>
+    </div>
+    <div id="cat-search-db-results" style="max-height:320px;overflow-y:auto;margin-bottom:0.5rem"></div>
+    <button id="cat-search-db-cancel" style="width:100%;background:none;border:none;color:#9A8FA8;font-family:inherit;font-size:0.78rem;font-weight:700;cursor:pointer;padding:0.5rem">Cancel</button>
   </div>
 </div>
 
@@ -1035,14 +1086,17 @@ function switchTab(tab) {
   document.getElementById('pt-cat').classList.toggle('active', tab === 'cat');
   document.getElementById('pt-custom').classList.toggle('active', tab === 'custom');
   document.getElementById('pt-scan').classList.toggle('active', tab === 'scan');
+  document.getElementById('pt-search').classList.toggle('active', tab === 'search');
   document.getElementById('pp-cat').style.display    = tab === 'cat'    ? '' : 'none';
   document.getElementById('pp-custom').style.display = tab === 'custom' ? '' : 'none';
   document.getElementById('pp-scan').style.display   = tab === 'scan'   ? '' : 'none';
+  document.getElementById('pp-search').style.display = tab === 'search' ? '' : 'none';
 }
 
 document.getElementById('pt-cat').addEventListener('click',    function() { switchTab('cat'); });
 document.getElementById('pt-custom').addEventListener('click', function() { switchTab('custom'); });
 document.getElementById('pt-scan').addEventListener('click',   function() { switchTab('scan'); });
+document.getElementById('pt-search').addEventListener('click', function() { switchTab('search'); });
 document.getElementById('btn-open-scanner').addEventListener('click', function() { openScanner(); });
 
 function renderPickerList(q) {
@@ -1641,6 +1695,87 @@ document.getElementById('managecat-delete').addEventListener('click', function()
 });
 
 // Catalog scan button - opens scanner in catalog-save mode
+document.getElementById('btn-cat-search').addEventListener('click', function() {
+  document.getElementById('cat-search-db-inp').value = '';
+  document.getElementById('cat-search-db-results').innerHTML = '';
+  openModal('modal-cat-search');
+});
+
+document.getElementById('cat-search-db-cancel').addEventListener('click', function() {
+  closeModal('modal-cat-search');
+});
+
+document.getElementById('cat-search-db-btn').addEventListener('click', function() {
+  var q = document.getElementById('cat-search-db-inp').value.trim();
+  if (!q) { toast('Enter a search term', 'err'); return; }
+  searchFoodDBCatalog(q);
+});
+
+document.getElementById('cat-search-db-inp').addEventListener('keydown', function(e) {
+  if (e.keyCode === 13) {
+    var q = this.value.trim();
+    if (q) searchFoodDBCatalog(q);
+  }
+});
+
+function searchFoodDBCatalog(query) {
+  var results = document.getElementById('cat-search-db-results');
+  results.innerHTML = '<div style="text-align:center;padding:1rem;color:#9A8FA8;font-size:0.78rem">Searching...</div>';
+  var xhr = new XMLHttpRequest();
+  var url = 'https://world.openfoodfacts.org/cgi/search.pl?search_terms=' +
+    encodeURIComponent(query) + '&search_simple=1&action=process&json=1&page_size=20&fields=product_name,brands,nutriments,serving_size';
+  xhr.open('GET', url, true);
+  xhr.timeout = 8000;
+  xhr.onload = function() {
+    if (xhr.status !== 200) { results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Search failed.</div>'; return; }
+    var json;
+    try { json = JSON.parse(xhr.responseText); } catch(e) {
+      results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Bad response.</div>'; return;
+    }
+    var products = json.products || [];
+    var valid = [];
+    for (var i=0; i<products.length; i++) {
+      var p = products[i];
+      var n = p.nutriments || {};
+      var cal = n['energy-kcal_serving'] || n['energy-kcal_100g'] || 0;
+      if (p.product_name && (cal || n['proteins_serving'] || n['proteins_100g'])) valid.push(p);
+    }
+    if (valid.length === 0) {
+      results.innerHTML = '<div style="text-align:center;padding:1rem;color:#9A8FA8;font-size:0.78rem">No results. Try a different term.</div>';
+      return;
+    }
+    results.innerHTML = '';
+    for (var j=0; j<valid.length; j++) {
+      (function(p) {
+        var n = p.nutriments || {};
+        var cal  = Math.round(n['energy-kcal_serving'] || n['energy-kcal_100g'] || 0);
+        var pro  = Math.round((n['proteins_serving']      || n['proteins_100g']      || 0) * 10) / 10;
+        var carb = Math.round((n['carbohydrates_serving'] || n['carbohydrates_100g'] || 0) * 10) / 10;
+        var fat  = Math.round((n['fat_serving']           || n['fat_100g']           || 0) * 10) / 10;
+        var name    = p.product_name || 'Unknown';
+        var brand   = p.brands || '';
+        var serving = p.serving_size || '100g';
+        var row = document.createElement('div');
+        row.style.cssText = 'padding:0.6rem 0.5rem;border-bottom:1px solid #F5EFE6;cursor:pointer';
+        row.innerHTML =
+          '<div style="font-size:0.82rem;font-weight:700;color:#1A1A2E">' + name + '</div>' +
+          (brand ? '<div style="font-size:0.62rem;color:#9A8FA8;margin-top:1px">' + brand + '</div>' : '') +
+          '<div style="font-size:0.62rem;color:#9A8FA8;margin-top:2px">' +
+            cal + ' kcal &nbsp;&bull;&nbsp; P' + pro + 'g &nbsp;C' + carb + 'g &nbsp;F' + fat + 'g' +
+            ' &nbsp;&bull;&nbsp; ' + serving + '</div>';
+        row.addEventListener('click', function() {
+          closeModal('modal-cat-search');
+          openFoodReview({ name: name, brand: brand, servingSize: serving, cal: cal, pro: pro, carb: carb, fat: fat }, 'catalog', '');
+        });
+        results.appendChild(row);
+      })(valid[j]);
+    }
+  };
+  xhr.ontimeout = function() { results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Request timed out.</div>'; };
+  xhr.onerror   = function() { results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Search failed.</div>'; };
+  xhr.send();
+}
+
 document.getElementById('btn-cat-scan').addEventListener('click', function() {
   _scanMode = 'catalog';
   _scannedFood = null;
@@ -1810,6 +1945,184 @@ function seed() {
   save();
 }
 
+// ─── FOOD DATABASE SEARCH ────────────────────────────────────────────────────
+var _reviewMode = 'log';  // 'log' or 'catalog'
+var _reviewMeal = '';
+
+function openFoodReview(food, mode, meal) {
+  _reviewMode = mode || 'log';
+  _reviewMeal = meal || '';
+  document.getElementById('fr-title').textContent   = 'Review & Edit';
+  document.getElementById('fr-source').textContent  = food.brand ? food.brand : '';
+  document.getElementById('fr-name').value    = food.name || '';
+  document.getElementById('fr-serving').value = food.servingSize || '1 serving';
+  document.getElementById('fr-qty').value     = '1';
+  document.getElementById('fr-cal').value     = food.cal  || 0;
+  document.getElementById('fr-pro').value     = food.pro  || 0;
+  document.getElementById('fr-carb').value    = food.carb || 0;
+  document.getElementById('fr-fat').value     = food.fat  || 0;
+  // Show/hide log buttons based on mode
+  document.getElementById('fr-acts-log').style.display    = mode === 'catalog' ? 'none' : '';
+  document.getElementById('fr-add-log').style.display     = mode === 'catalog' ? 'none' : '';
+  document.getElementById('fr-save-catalog').style.display = mode === 'catalog' ? 'none' : '';
+  document.getElementById('fr-catalog-only').style.display = mode === 'catalog' ? '' : 'none';
+  // In log mode show both log and save+log
+  if (mode !== 'catalog') {
+    document.getElementById('fr-acts-log').style.display    = '';
+    document.getElementById('fr-save-catalog').style.display = '';
+    document.getElementById('fr-catalog-only').style.display = 'none';
+  }
+  openModal('modal-food-review');
+}
+
+function getFoodReviewEntry() {
+  var qty     = parseFloat(document.getElementById('fr-qty').value) || 1;
+  var name    = document.getElementById('fr-name').value.trim();
+  var serving = document.getElementById('fr-serving').value.trim() || '1 serving';
+  var cal  = parseFloat(document.getElementById('fr-cal').value)  || 0;
+  var pro  = parseFloat(document.getElementById('fr-pro').value)  || 0;
+  var carb = parseFloat(document.getElementById('fr-carb').value) || 0;
+  var fat  = parseFloat(document.getElementById('fr-fat').value)  || 0;
+  var base = { cal: cal, pro: pro, carb: carb, fat: fat };
+  return {
+    logEntry: {
+      meal: _reviewMeal, name: name,
+      cal: cal*qty, pro: pro*qty, carb: carb*qty, fat: fat*qty,
+      servingLabel: qty + ' x ' + serving,
+      _qty: qty, _base: base, _servingDesc: serving
+    },
+    catalogEntry: {
+      name: name, qty: 1, unit: serving,
+      cat: 'Uncategorized', cal: cal, pro: pro, carb: carb, fat: fat, notes: ''
+    }
+  };
+}
+
+function saveReviewToCatalog(entry) {
+  var exists = false;
+  for (var i=0; i<data.catalog.length; i++) {
+    if (data.catalog[i].name.toLowerCase() === entry.name.toLowerCase()) { exists = true; break; }
+  }
+  if (!exists) { data.catalog.push(entry); save(); }
+  return !exists;
+}
+
+document.getElementById('fr-cancel').addEventListener('click', function() { closeModal('modal-food-review'); });
+
+document.getElementById('fr-add-log').addEventListener('click', function() {
+  var name = document.getElementById('fr-name').value.trim();
+  if (!name) { toast('Enter a food name', 'err'); return; }
+  var e = getFoodReviewEntry();
+  getDay(viewingDate).log.push(e.logEntry);
+  save();
+  closeModal('modal-food-review');
+  closeModal('modal-log');
+  closeModal('modal-scan');
+  renderToday();
+  toast('Added to log!', 'ok');
+});
+
+document.getElementById('fr-save-catalog').addEventListener('click', function() {
+  var name = document.getElementById('fr-name').value.trim();
+  if (!name) { toast('Enter a food name', 'err'); return; }
+  var e = getFoodReviewEntry();
+  var isNew = saveReviewToCatalog(e.catalogEntry);
+  getDay(viewingDate).log.push(e.logEntry);
+  save();
+  closeModal('modal-food-review');
+  closeModal('modal-log');
+  closeModal('modal-scan');
+  renderToday();
+  toast(isNew ? 'Saved to catalog + added!' : 'Added to log!', 'ok');
+});
+
+document.getElementById('fr-catalog-only').addEventListener('click', function() {
+  var name = document.getElementById('fr-name').value.trim();
+  if (!name) { toast('Enter a food name', 'err'); return; }
+  var e = getFoodReviewEntry();
+  var isNew = saveReviewToCatalog(e.catalogEntry);
+  save();
+  closeModal('modal-food-review');
+  closeModal('modal-scan');
+  renderCatalog();
+  toast(isNew ? 'Saved to catalog!' : 'Already in catalog', isNew ? 'ok' : '');
+});
+
+function searchFoodDB(query) {
+  var results = document.getElementById('food-search-results');
+  results.innerHTML = '<div style="text-align:center;padding:1rem;color:#9A8FA8;font-size:0.78rem">Searching...</div>';
+  var xhr = new XMLHttpRequest();
+  var url = 'https://world.openfoodfacts.org/cgi/search.pl?search_terms=' +
+    encodeURIComponent(query) + '&search_simple=1&action=process&json=1&page_size=20&fields=product_name,brands,nutriments,serving_size';
+  xhr.open('GET', url, true);
+  xhr.timeout = 8000;
+  xhr.onload = function() {
+    if (xhr.status !== 200) { results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Search failed. Try again.</div>'; return; }
+    var json;
+    try { json = JSON.parse(xhr.responseText); } catch(e) {
+      results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Bad response.</div>'; return;
+    }
+    var products = json.products || [];
+    // Filter to items with at least a name and some nutrition
+    var valid = [];
+    for (var i=0; i<products.length; i++) {
+      var p = products[i];
+      var n = p.nutriments || {};
+      var cal = n['energy-kcal_serving'] || n['energy-kcal_100g'] || 0;
+      if (p.product_name && (cal || n['proteins_serving'] || n['proteins_100g'])) {
+        valid.push(p);
+      }
+    }
+    if (valid.length === 0) {
+      results.innerHTML = '<div style="text-align:center;padding:1rem;color:#9A8FA8;font-size:0.78rem">No results found. Try a different search term.</div>';
+      return;
+    }
+    results.innerHTML = '';
+    for (var j=0; j<valid.length; j++) {
+      (function(p) {
+        var n = p.nutriments || {};
+        var cal  = Math.round(n['energy-kcal_serving'] || n['energy-kcal_100g'] || 0);
+        var pro  = Math.round((n['proteins_serving']      || n['proteins_100g']      || 0) * 10) / 10;
+        var carb = Math.round((n['carbohydrates_serving'] || n['carbohydrates_100g'] || 0) * 10) / 10;
+        var fat  = Math.round((n['fat_serving']           || n['fat_100g']           || 0) * 10) / 10;
+        var name    = p.product_name || 'Unknown';
+        var brand   = p.brands || '';
+        var serving = p.serving_size || '100g';
+        var row = document.createElement('div');
+        row.style.cssText = 'padding:0.6rem 0.5rem;border-bottom:1px solid #F5EFE6;cursor:pointer';
+        row.innerHTML =
+          '<div style="font-size:0.82rem;font-weight:700;color:#1A1A2E">' + name + '</div>' +
+          (brand ? '<div style="font-size:0.62rem;color:#9A8FA8;margin-top:1px">' + brand + '</div>' : '') +
+          '<div style="font-size:0.62rem;color:#9A8FA8;margin-top:2px">' +
+            cal + ' kcal &nbsp;&bull;&nbsp; P' + pro + 'g &nbsp;C' + carb + 'g &nbsp;F' + fat + 'g' +
+            ' &nbsp;&bull;&nbsp; ' + serving +
+          '</div>';
+        row.addEventListener('click', function() {
+          var meal = document.getElementById('ml-meal').value;
+          openFoodReview({ name: name, brand: brand, servingSize: serving, cal: cal, pro: pro, carb: carb, fat: fat }, 'log', meal);
+        });
+        results.appendChild(row);
+      })(valid[j]);
+    }
+  };
+  xhr.ontimeout = function() { results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Request timed out.</div>'; };
+  xhr.onerror   = function() { results.innerHTML = '<div style="text-align:center;padding:1rem;color:#E8533A;font-size:0.78rem">Search failed. Check connection.</div>'; };
+  xhr.send();
+}
+
+document.getElementById('food-search-btn').addEventListener('click', function() {
+  var q = document.getElementById('food-search-inp').value.trim();
+  if (!q) { toast('Enter a search term', 'err'); return; }
+  searchFoodDB(q);
+});
+
+document.getElementById('food-search-inp').addEventListener('keydown', function(e) {
+  if (e.keyCode === 13) {
+    var q = this.value.trim();
+    if (q) searchFoodDB(q);
+  }
+});
+
 // ─── BARCODE SCANNER ─────────────────────────────────────────────────────────
 var _codeReader   = null;
 var _scannedFood  = null;
@@ -1920,8 +2233,11 @@ function lookupBarcode(barcode) {
     var name  = p.product_name || p.product_name_en || 'Unknown Product';
     var brand = p.brands || '';
     _scannedFood = { name: name, brand: brand, servingSize: servingSize, cal: cal, pro: pro, carb: carb, fat: fat };
-    populateScanResult();
     setScanStatus('Product found!', '#27AE60');
+    stopScanner();
+    closeModal('modal-scan');
+    var meal = document.getElementById('ml-meal') ? document.getElementById('ml-meal').value : '';
+    openFoodReview(_scannedFood, _scanMode === 'catalog' ? 'catalog' : 'log', meal);
   };
   xhr.ontimeout = function() { setScanStatus('Lookup timed out.', '#E8533A'); };
   xhr.onerror   = function() { setScanStatus('Lookup failed. Check connection.', '#E8533A'); };
