@@ -157,12 +157,7 @@ html,body{width:100%;height:100%;background:#FDF8F2;color:#1A1A2E;font-family:-a
 .stat-lbl{font-size:0.6rem;font-weight:700;color:#9A8FA8;text-transform:uppercase;letter-spacing:0.07em;margin-top:4px}
 .stat-card.s-coral .stat-val{color:#E8533A}
 .stat-card.s-green .stat-val{color:#27AE60}
-.chart-card{background:#fff;border:1.5px solid #EDE5D8;border-radius:18px;padding:0.9rem;margin-bottom:0.75rem;box-shadow:0 1px 8px rgba(26,26,46,0.06)}
-.chart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.7rem}
-.chart-title{font-size:0.72rem;font-weight:800;color:#1A1A2E}
-.chart-legend{display:flex;gap:0.75rem}
-.legend-item{display:flex;align-items:center;gap:0.3rem;font-size:0.62rem;font-weight:600;color:#9A8FA8}
-.legend-dot{width:8px;height:8px;border-radius:50%}
+
 .hist-section-lbl{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#9A8FA8;margin-bottom:0.5rem}
 .hday{background:#fff;border:1.5px solid #EDE5D8;border-radius:12px;padding:0.85rem;margin-bottom:0.4rem;box-shadow:0 1px 8px rgba(26,26,46,0.06);cursor:pointer}
 .hday-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem}
@@ -250,7 +245,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
   <div class="day-nav">
     <button class="day-nav-btn" id="day-prev">&#8249;</button>
     <div class="day-nav-label" id="day-nav-label">Today</div>
-    <button class="day-nav-btn" id="day-next" disabled>&#8250;</button>
+    <button class="day-nav-btn" id="day-next">&#8250;</button>
   </div>
   <div class="burned-row">
     <div class="burned-left">
@@ -318,16 +313,7 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
       <button class="hfilt-apply" id="hfilt-apply">Apply</button>
     </div>
     <div class="stat-grid" id="hist-stats"></div>
-    <div class="chart-card" id="hist-chart-wrap" style="display:none">
-      <div class="chart-hdr">
-        <div class="chart-title">Calories In vs Out</div>
-        <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#E8533A"></div>In</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#4A7CF6"></div>Out</div>
-        </div>
-      </div>
-      <canvas id="hchart" style="width:100%;height:140px;display:block"></canvas>
-    </div>
+
     <div class="hist-section-lbl" id="hist-section-lbl" style="display:none">Days</div>
     <div id="hist-log"></div>
   </div>
@@ -725,7 +711,7 @@ function updateDayNav() {
   var lbl = document.getElementById('day-nav-label');
   lbl.textContent = dayLabel(viewingDate);
   lbl.className = 'day-nav-label' + (isToday(viewingDate) ? ' is-today' : '');
-  document.getElementById('day-next').disabled = isToday(viewingDate);
+  document.getElementById('day-next').disabled = false;
   var day = getDay(viewingDate);
   var bd = document.getElementById('burned-display');
   bd.textContent = day.burned > 0
@@ -742,7 +728,6 @@ document.getElementById('day-prev').addEventListener('click', function() {
 });
 
 document.getElementById('day-next').addEventListener('click', function() {
-  if (isToday(viewingDate)) return;
   var d = new Date(viewingDate);
   d.setDate(d.getDate() + 1);
   viewingDate = d;
@@ -1395,9 +1380,12 @@ function filterDays(days) {
 }
 
 function renderHistory() {
+  var todayStr = dateKey(todayDate());
   var allDays = [];
   var keys = Object.keys(data.days);
   for (var i=0; i<keys.length; i++) {
+    // Exclude future days from history metrics
+    if (keys[i] > todayStr) continue;
     if (isDayActive(data.days[keys[i]])) allDays.push([keys[i], data.days[keys[i]]]);
   }
   allDays.sort(function(a,b) { return b[0].localeCompare(a[0]); });
@@ -1406,18 +1394,15 @@ function renderHistory() {
 
   var statsEl  = document.getElementById('hist-stats');
   var logEl    = document.getElementById('hist-log');
-  var chartWrap = document.getElementById('hist-chart-wrap');
   var sectionLbl = document.getElementById('hist-section-lbl');
 
   if (filtered.length === 0) {
     statsEl.innerHTML = '';
-    chartWrap.style.display = 'none';
     sectionLbl.style.display = 'none';
     logEl.innerHTML = '<div class="hist-empty">No days logged yet.<br>Start adding food to see your history.</div>';
     return;
   }
 
-  chartWrap.style.display = '';
   sectionLbl.style.display = '';
 
   // Stats
@@ -1436,9 +1421,6 @@ function renderHistory() {
     '<div class="stat-card"><div class="stat-val">' + fmt(totalBurn/n) + '</div><div class="stat-lbl">Avg Burned</div></div>' +
     '<div class="stat-card ' + (netAll<=0 ? 's-green' : '') + '"><div class="stat-val">' + (netAll<=0?'-':'+') + fmt(Math.abs(netAll)) + '</div><div class="stat-lbl">Total Net Cals</div></div>' +
     '<div class="stat-card"><div class="stat-val">' + n + '</div><div class="stat-lbl">Days Tracked</div></div>';
-
-  // Chart
-  drawChart(filtered.slice(0,14).reverse());
 
   // Day rows
   logEl.innerHTML = '';
@@ -1484,60 +1466,6 @@ function renderHistory() {
   }
 }
 
-function drawChart(days) {
-  var canvas = document.getElementById('hchart');
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext('2d');
-  var dpr = window.devicePixelRatio || 1;
-  var w = canvas.offsetWidth;
-  var h = 140;
-  canvas.width  = w * dpr;
-  canvas.height = h * dpr;
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, w, h);
-  if (!days.length) return;
-
-  var inD  = days.map(function(d) { return totals(d[1].log).cal; });
-  var outD = days.map(function(d) { return d[1].burned || 0; });
-  var maxV = Math.max.apply(null, inD.concat(outD).concat([500]));
-  var pad  = { top:8, right:8, bottom:22, left:36 };
-  var cw   = w - pad.left - pad.right;
-  var ch   = h - pad.top  - pad.bottom;
-  var step = cw / days.length;
-  var bw   = Math.max(step - 4, 3);
-
-  // Grid lines
-  ctx.strokeStyle = '#EDE5D8';
-  ctx.lineWidth = 0.8;
-  var gridLines = [0, 0.25, 0.5, 0.75, 1];
-  for (var gi=0; gi<gridLines.length; gi++) {
-    var gy = pad.top + ch * (1 - gridLines[gi]);
-    ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(pad.left + cw, gy); ctx.stroke();
-    if (gridLines[gi] > 0) {
-      ctx.fillStyle = '#C8BFCE';
-      ctx.font = '9px system-ui';
-      ctx.textAlign = 'right';
-      ctx.fillText(fmt(maxV * gridLines[gi]), pad.left - 3, gy + 3);
-    }
-  }
-
-  // Bars
-  for (var bi=0; bi<inD.length; bi++) {
-    var x = pad.left + bi * step;
-    var bh = (inD[bi] / maxV) * ch;
-    ctx.fillStyle = '#E8533A';
-    ctx.fillRect(x + step * 0.1, pad.top + ch - bh, bw * 0.48, bh);
-    var bh2 = (outD[bi] / maxV) * ch;
-    ctx.fillStyle = '#4A7CF6';
-    ctx.fillRect(x + step * 0.52, pad.top + ch - bh2, bw * 0.45, bh2);
-    // X label
-    var dd = new Date(days[bi][0] + 'T12:00:00');
-    ctx.fillStyle = '#9A8FA8';
-    ctx.font = '8px system-ui';
-    ctx.textAlign = 'center';
-    ctx.fillText((dd.getMonth()+1) + '/' + dd.getDate(), pad.left + bi * step + step / 2, h - 4);
-  }
-}
 
 // ─── SEED DATA ───────────────────────────────────────────────────────────────
 function seed() {
