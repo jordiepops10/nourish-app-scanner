@@ -72,10 +72,7 @@ html,body{width:100%;height:100%;background:#FDF8F2;color:#1A1A2E;font-family:-a
 .meal-header{display:flex;align-items:center;justify-content:space-between;padding:0.3rem 0.1rem 0.4rem;border-bottom:1px solid #EDE5D8;margin-bottom:0.4rem}
 .meal-name{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:#9A8FA8}
 .meal-kcal{font-size:0.65rem;color:#C8BFCE}
-.log-card{position:relative;overflow:hidden;background:#fff;border:1.5px solid #EDE5D8;border-radius:12px;margin-bottom:0.35rem;box-shadow:0 1px 8px rgba(26,26,46,0.06)}
-.swipe-actions{position:absolute;top:0;bottom:0;display:flex;align-items:stretch;pointer-events:none}
-.swipe-action-left{position:absolute;left:0;top:0;bottom:0;width:72px;background:#27AE60;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.72rem;font-weight:800;cursor:pointer}
-.swipe-action-right{position:absolute;right:0;top:0;bottom:0;width:72px;background:#E8533A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.72rem;font-weight:800;cursor:pointer}
+.log-card{position:relative;background:#fff;border:1.5px solid #EDE5D8;border-radius:12px;margin-bottom:0.35rem;box-shadow:0 1px 8px rgba(26,26,46,0.06)}
 .log-row{display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.75rem;position:relative;background:#fff;will-change:transform;transition:transform 0.2s ease}
 .log-row{display:flex;align-items:center;gap:0.6rem;padding:0.65rem 0.75rem}
 .log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -107,29 +104,27 @@ html,body{width:100%;height:100%;background:#FDF8F2;color:#1A1A2E;font-family:-a
 .crow-del{position:absolute;right:0;top:0;bottom:0;width:72px;background:#E8533A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:800;z-index:0}
 .ctable{width:100%;border-collapse:collapse;font-size:0.76rem}
 .ctable-header-wrap{padding:0;flex-shrink:0;background:#FDF8F2;border-bottom:2px solid #EDE5D8}
+.cat-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;width:100%}
 .ctable-header-wrap table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:0.76rem}
-.ctable-header-wrap th{font-size:0.6rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#9A8FA8;padding:0.35rem 0.45rem;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;background:#FDF8F2}
-.ctable-header-wrap th:first-child{padding-left:1rem}
-.ctable-header-wrap th:last-child{padding-right:1rem}
-.ctable-header-wrap th.sorted{color:#E8533A}
+.cat-hdr-cell{font-size:0.6rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#9A8FA8;padding:0.35rem 0.45rem;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;background:#FDF8F2}
+.cat-hdr-cell:first-child{padding-left:1rem}
+.cat-hdr-cell.sorted{color:#E8533A}
 .ctable thead{position:sticky;top:0;z-index:10;background:#FDF8F2}
 .ctable th{font-size:0.6rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#9A8FA8;padding:0.35rem 0.45rem;text-align:left;border-bottom:2px solid #EDE5D8;white-space:nowrap;cursor:pointer;user-select:none;background:#FDF8F2}
 .ctable th.sorted{color:#E8533A}
 .ctable td{padding:0.62rem 0.45rem;border-bottom:1px solid #F5EFE6;white-space:nowrap}
 .cat-rows{width:100%}
-.cat-row{position:relative;overflow:hidden;border-bottom:1px solid #F5EFE6;background:#fff}
+.cat-row{position:relative;border-bottom:1px solid #F5EFE6;background:#fff}
 .cat-row:last-child{border-bottom:none}
-.cat-row-inner{display:flex;align-items:center;background:#fff;position:relative;z-index:1;will-change:transform;transition:transform 0.2s ease}
-.cat-row-inner .cr-cell{padding:0.62rem 0.45rem;font-size:0.76rem;white-space:nowrap;flex-shrink:0}
-.cat-row-inner .cr-name{font-weight:700;color:#1A1A2E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;flex-shrink:1;padding-left:1rem}
+.cat-row-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;align-items:start;background:#fff;position:relative;z-index:1;will-change:transform;transition:transform 0.2s ease;width:100%}
+.cat-row-inner .cr-cell{padding:0.62rem 0.45rem;font-size:0.76rem;white-space:nowrap}
+.cat-row-inner .cr-name{font-weight:700;color:#1A1A2E;white-space:normal;line-height:1.3;padding-left:1rem;word-break:break-word;min-width:0}
 .cat-row-inner .cr-num{color:#9A8FA8;font-weight:600;padding-right:1rem}
 .cat-row-inner .cr-cal{font-weight:800;color:#1A1A2E}
 .cat-row-inner .cr-pro{color:#4A7CF6;font-weight:700}
 .cat-row-inner .cr-carb{color:#F5A623;font-weight:700}
 .cat-row-inner .cr-fat{color:#27AE60;font-weight:700}
 .cat-row-inner .cr-num{color:#9A8FA8;font-weight:600}
-.cat-swipe-edit{position:absolute;left:0;top:0;bottom:0;width:72px;background:#27AE60;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.72rem;font-weight:800;z-index:0;cursor:pointer}
-.cat-swipe-del{position:absolute;right:0;top:0;bottom:0;width:72px;background:#E8533A;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.72rem;font-weight:800;z-index:0;cursor:pointer}
 .ctable tr:last-child td{border-bottom:none}
 .td-name{white-space:normal!important;font-weight:700;color:#1A1A2E}
 .td-cal{font-weight:800;color:#1A1A2E;text-align:left}
@@ -228,6 +223,22 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:#27AE60}
 .toast.err{background:#E8533A}
+
+.log-card.expanded{border-color:#E8533A}
+.log-expand{display:none;padding:0.5rem 0.75rem 0.65rem;border-top:1px solid #F5EFE6;gap:0.5rem;align-items:center;justify-content:space-between}
+.log-card.expanded .log-expand{display:flex}
+.log-expand-macros{display:flex;gap:0.75rem;font-size:0.72rem}
+.log-expand-macros span{font-weight:700}
+.log-expand-acts{display:flex;gap:0.5rem}
+.log-expand-btn{background:none;border:1.5px solid #EDE5D8;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.log-expand-btn.del{border-color:rgba(232,83,58,0.3)}
+.cat-row-expand{display:none;padding:0.5rem 1rem 0.65rem;border-top:1px solid #F5EFE6;background:#F5EFE6;gap:0.5rem;align-items:center;justify-content:space-between}
+.cat-row.expanded .cat-row-expand{display:flex}
+.cat-row.expanded .cat-row-inner{background:#FDF8F2}
+.cat-expand-macros{display:flex;gap:0.75rem;font-size:0.72rem;flex-wrap:wrap}
+.cat-expand-acts{display:flex;gap:0.5rem;flex-shrink:0}
+.cat-expand-btn{background:#fff;border:1.5px solid #EDE5D8;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cat-expand-btn.del{border-color:rgba(232,83,58,0.3)}
 </style>
 
 </head>
@@ -278,7 +289,10 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 <div class="page hidden" id="page-catalog">
   <div class="ph">
     <div><div class="ph-title">Catalog</div></div>
-    <button class="ph-btn-coral" id="btn-add-food">+ Add Food</button>
+    <div style="display:flex;gap:0.4rem;align-items:center">
+      <button class="ph-btn" id="btn-cat-scan" title="Scan barcode"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h2M7 5h1M11 5h2M15 5h1M19 5h2M3 12h2M7 12h1M11 12h2M15 12h1M19 12h2M3 19h2M7 19h1M11 19h2M15 19h1M19 19h2M3 5v14M21 5v14"/></svg></button>
+      <button class="ph-btn-coral" id="btn-add-food">+ Add Food</button>
+    </div>
   </div>
   <div class="cat-top">
     <div class="search-wrap">
@@ -539,6 +553,21 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
   </div>
 </div>
 
+<!-- MODAL: MANAGE CATEGORY -->
+
+<div class="overlay" id="modal-managecat">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="sheet-title" id="managecat-title">Manage Category</div>
+    <div class="field"><label class="lbl">Rename</label><input class="inp" id="managecat-name" type="text"></div>
+    <div class="modal-acts">
+      <button class="btn-s" id="managecat-cancel">Cancel</button>
+      <button class="btn-p" id="managecat-rename">Save Name</button>
+    </div>
+    <button id="managecat-delete" style="width:100%;margin-top:0.6rem;background:none;border:1.5px solid #E8533A;border-radius:30px;padding:0.75rem;font-family:inherit;font-size:0.85rem;font-weight:700;color:#E8533A;cursor:pointer">Delete Category</button>
+  </div>
+</div>
+
 <!-- MODAL: GOALS -->
 
 <div class="overlay" id="modal-goals">
@@ -551,10 +580,46 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
       <div class="field"><label class="lbl">Carbs (g)</label><input class="inp" id="mg-carb" type="number"></div>
       <div class="field"><label class="lbl">Fat (g)</label><input class="inp" id="mg-fat" type="number"></div>
     </div>
+    <div style="margin-top:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
+        <label class="lbl" style="margin:0">Meal Sections</label>
+        <button id="btn-add-meal" style="background:#E8533A;color:#fff;border:none;border-radius:12px;padding:0.3rem 0.65rem;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit">+ Add</button>
+      </div>
+      <div id="meal-list-mgr"></div>
+    </div>
     <div class="modal-acts">
       <button class="btn-s" id="mg-cancel">Cancel</button>
       <button class="btn-p" id="mg-save">Save Goals</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL: ADD MEAL SECTION -->
+
+<div class="overlay" id="modal-addmeal">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="sheet-title">Add Meal Section</div>
+    <div class="field"><label class="lbl">Meal Name</label><input class="inp" id="newmeal-name" type="text" placeholder="e.g. Breakfast, Lunch, Snacks"></div>
+    <div class="modal-acts">
+      <button class="btn-s" id="newmeal-cancel">Cancel</button>
+      <button class="btn-p" id="newmeal-save">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MANAGE MEAL SECTION -->
+
+<div class="overlay" id="modal-managemeal">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div class="sheet-title" id="managemeal-title">Manage Meal</div>
+    <div class="field"><label class="lbl">Rename</label><input class="inp" id="managemeal-name" type="text"></div>
+    <div class="modal-acts">
+      <button class="btn-s" id="managemeal-cancel">Cancel</button>
+      <button class="btn-p" id="managemeal-rename">Save Name</button>
+    </div>
+    <button id="managemeal-delete" style="width:100%;margin-top:0.6rem;background:none;border:1.5px solid #E8533A;border-radius:30px;padding:0.75rem;font-family:inherit;font-size:0.85rem;font-weight:700;color:#E8533A;cursor:pointer">Delete Meal Section</button>
   </div>
 </div>
 
@@ -565,24 +630,27 @@ select.inp{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www
 var SK = 'nourish_v4';
 var GK = 'nourish_goals_v4';
 var CK = 'nourish_cats_v4';
+var MK = 'nourish_meals_v1';
 
 // ─── DEFAULT DATA ────────────────────────────────────────────────────────────
 var DEFAULT_GOALS = { calories: 2005, protein: 165, carbs: 154, fat: 81 };
-var DEFAULT_MEALS = ['Supplements','Breakfast','Lunch','Dinner','Snacks'];
-var DEFAULT_CATS  = ['Supplements','Breakfast','Lunch','Dinner','Snacks','Alcohol','Other'];
-var DOT_COLORS    = { Supplements:'#E8533A', Breakfast:'#F5A623', Lunch:'#4A7CF6', Dinner:'#27AE60', Snacks:'#9B59B6' };
+var DEFAULT_MEALS = ['Breakfast','Lunch','Dinner','Snacks'];
+var DEFAULT_CATS  = ['Uncategorized'];
+var DOT_COLORS    = {};
 
 // ─── LOAD STATE ──────────────────────────────────────────────────────────────
-var data, goals, customCats;
+var data, goals, customCats, customMeals;
 try { data = JSON.parse(localStorage.getItem(SK)) || { catalog:[], days:{} }; } catch(e) { data = { catalog:[], days:{} }; }
 try { goals = JSON.parse(localStorage.getItem(GK)) || DEFAULT_GOALS; } catch(e) { goals = DEFAULT_GOALS; }
 try { customCats = JSON.parse(localStorage.getItem(CK)) || []; } catch(e) { customCats = []; }
+try { customMeals = JSON.parse(localStorage.getItem(MK)) || []; } catch(e) { customMeals = []; }
 
-function getMeals() { return DEFAULT_MEALS.concat(customCats); }
+function getMeals() { return DEFAULT_MEALS.concat(customMeals); }
 function getCats()  { return DEFAULT_CATS.concat(customCats); }
 function save()      { try { localStorage.setItem(SK, JSON.stringify(data)); } catch(e) {} }
 function saveGoals() { try { localStorage.setItem(GK, JSON.stringify(goals)); } catch(e) {} }
 function saveCats()  { try { localStorage.setItem(CK, JSON.stringify(customCats)); } catch(e) {} }
+function saveMeals() { try { localStorage.setItem(MK, JSON.stringify(customMeals)); } catch(e) {} }
 
 // ─── DATE HELPERS ────────────────────────────────────────────────────────────
 function dateKey(d) { return d.toISOString().slice(0,10); }
@@ -807,16 +875,9 @@ function renderToday() {
       (function(entry) {
         var card = document.createElement('div');
         card.className = 'log-card';
-        // Edit action (revealed on swipe right)
-        var editAction = document.createElement('div');
-        editAction.className = 'swipe-action-left';
-        editAction.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-        // Delete action (revealed on swipe left)
-        var delAction = document.createElement('div');
-        delAction.className = 'swipe-action-right';
-        delAction.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
         var row = document.createElement('div');
         row.className = 'log-row';
+        row.style.cursor = 'pointer';
         row.innerHTML =
           '<div class="log-dot" style="background:' + dotColor + '"></div>' +
           '<div class="log-info">' +
@@ -827,11 +888,41 @@ function renderToday() {
             '<div class="log-cal">' + fmt(entry.item.cal) + '</div>' +
             '<div class="log-mp">P' + fmtG(entry.item.pro) + ' C' + fmtG(entry.item.carb) + ' F' + fmtG(entry.item.fat) + '</div>' +
           '</div>';
-        card.appendChild(editAction);
-        card.appendChild(delAction);
+        // Expand panel
+        var expand = document.createElement('div');
+        expand.className = 'log-expand';
+        expand.innerHTML =
+          '<div class="log-expand-macros">' +
+            '<span style="color:#4A7CF6">P ' + fmtG(entry.item.pro) + '</span>' +
+            '<span style="color:#F5A623">C ' + fmtG(entry.item.carb) + '</span>' +
+            '<span style="color:#27AE60">F ' + fmtG(entry.item.fat) + '</span>' +
+            '<span style="color:#1A1A2E">' + fmt(entry.item.cal) + ' kcal</span>' +
+          '</div>' +
+          '<div class="log-expand-acts">' +
+            '<button class="log-expand-btn edit">' + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' + '</button>' +
+            '<button class="log-expand-btn del">'  + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>' + '</button>' +
+          '</div>';
         card.appendChild(row);
-        // Add swipe behaviour
-        addLogSwipe(card, row, editAction, delAction, entry.idx, day);
+        card.appendChild(expand);
+        // Tap to expand/collapse
+        row.addEventListener('click', function() {
+          var isExp = card.classList.contains('expanded');
+          // Close any other expanded log card
+          var allCards = document.querySelectorAll('.log-card.expanded');
+          for (var ac=0; ac<allCards.length; ac++) allCards[ac].classList.remove('expanded');
+          if (!isExp) card.classList.add('expanded');
+        });
+        // Edit / delete buttons
+        expand.querySelector('.log-expand-btn.edit').addEventListener('click', function(e) {
+          e.stopPropagation();
+          card.classList.remove('expanded');
+          openEditLogModal(entry.idx);
+        });
+        expand.querySelector('.log-expand-btn.del').addEventListener('click', function(e) {
+          e.stopPropagation();
+          day.log.splice(entry.idx, 1);
+          save(); renderToday(); toast('Removed');
+        });
         sec.appendChild(card);
       })(items[ii]);
     }
@@ -1130,6 +1221,7 @@ document.getElementById('btn-goals').addEventListener('click', function() {
   document.getElementById('mg-pro').value  = goals.protein;
   document.getElementById('mg-carb').value = goals.carbs;
   document.getElementById('mg-fat').value  = goals.fat;
+  renderMealListMgr();
   openModal('modal-goals');
 });
 
@@ -1156,15 +1248,37 @@ function renderCatalog(q) {
   // Filter chips
   var fw   = document.getElementById('cat-filters');
   fw.innerHTML = '';
-  var chips = ['All'].concat(getCats());
-  for (var ci=0; ci<chips.length; ci++) {
+  var allChips = ['All'].concat(getCats());
+  for (var ci=0; ci<allChips.length; ci++) {
     (function(c) {
-      var chip = document.createElement('button');
-      chip.className = 'chip' + (_catFilter === c ? ' active' : '');
-      chip.textContent = c;
-      chip.addEventListener('click', function() { _catFilter = c; renderCatalog(); });
-      fw.appendChild(chip);
-    })(chips[ci]);
+      var isCustom = customCats.indexOf(c) !== -1;
+      if (isCustom) {
+        // Custom category: chip + manage button wrapped together
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;align-items:center;gap:0;flex-shrink:0';
+        var chip = document.createElement('button');
+        chip.className = 'chip' + (_catFilter === c ? ' active' : '');
+        chip.style.borderRadius = '20px 0 0 20px';
+        chip.style.borderRight = 'none';
+        chip.textContent = c;
+        chip.addEventListener('click', function() { _catFilter = c; renderCatalog(); });
+        var manBtn = document.createElement('button');
+        manBtn.className = 'chip' + (_catFilter === c ? ' active' : '');
+        manBtn.style.borderRadius = '0 20px 20px 0';
+        manBtn.style.padding = '0.28rem 0.45rem';
+        manBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>';
+        manBtn.addEventListener('click', function() { openManageCat(c); });
+        wrap.appendChild(chip);
+        wrap.appendChild(manBtn);
+        fw.appendChild(wrap);
+      } else {
+        var chip2 = document.createElement('button');
+        chip2.className = 'chip' + (_catFilter === c ? ' active' : '');
+        chip2.textContent = c;
+        chip2.addEventListener('click', function() { _catFilter = c; renderCatalog(); });
+        fw.appendChild(chip2);
+      }
+    })(allChips[ci]);
   }
   // Add category button
   var addCatBtn = document.createElement('button');
@@ -1207,32 +1321,25 @@ function renderCatalog(q) {
   var cols = [
     { key:'name', label:'Food', w:'36%' }, { key:'cal', label:'Cal',  w:'13%' },
     { key:'pro',  label:'Pro',  w:'13%' }, { key:'carb',label:'Carb', w:'13%' },
-    { key:'fat',  label:'Fat',  w:'13%' }, { key:'qty', label:'Srv',  w:'12%' }
+    { key:'fat',  label:'Fat',  w:'13%' }
   ];
   var arr = _catSort.dir === 'asc' ? ' &#8593;' : ' &#8595;';
 
-  // Shared colgroup — % widths, consistent between header and body tables
-  var colgroup = '<colgroup>';
-  for (var ci4=0; ci4<cols.length; ci4++) {
-    colgroup += '<col style="width:' + cols[ci4].w + '">';
-  }
-  colgroup += '</colgroup>';
-
-  // ── Frozen header ──
+  // ── Frozen header — CSS grid ──
   var headerEl = document.getElementById('cat-header');
-  var hdrHtml = '<table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:0.76rem">' + colgroup + '<thead><tr>';
+  var hdrHtml = '<div class="cat-grid">';
   for (var ci3=0; ci3<cols.length; ci3++) {
     var ch = cols[ci3];
     var hs = _catSort.col === ch.key;
-    hdrHtml += '<th class="' + (hs ? 'sorted' : '') + '" data-col="' + ch.key + '">' + ch.label + (hs ? arr : '') + '</th>';
+    hdrHtml += '<div class="cat-hdr-cell' + (hs ? ' sorted' : '') + '" data-col="' + ch.key + '">' + ch.label + (hs ? arr : '') + '</div>';
   }
-  hdrHtml += '</tr></thead></table>';
+  hdrHtml += '</div>';
   headerEl.innerHTML = hdrHtml;
 
-  // Wire sort clicks on header
-  var hdrThs = headerEl.querySelectorAll('th[data-col]');
-  for (var hi=0; hi<hdrThs.length; hi++) {
-    hdrThs[hi].addEventListener('click', function() {
+  // Wire sort clicks on header divs
+  var hdrDivs = headerEl.querySelectorAll('[data-col]');
+  for (var hi=0; hi<hdrDivs.length; hi++) {
+    hdrDivs[hi].addEventListener('click', function() {
       var col = this.dataset.col;
       if (_catSort.col === col) { _catSort.dir = _catSort.dir === 'asc' ? 'desc' : 'asc'; }
       else { _catSort.col = col; _catSort.dir = 'asc'; }
@@ -1244,7 +1351,6 @@ function renderCatalog(q) {
   container.innerHTML = '';
   var catRowsDiv = document.createElement('div');
   catRowsDiv.className = 'cat-rows';
-  var colWidths = ['36%','13%','13%','13%','13%','12%'];
   for (var ri=0; ri<items.length; ri++) {
     var food = items[ri].food;
     var idx  = items[ri].idx;
@@ -1254,12 +1360,11 @@ function renderCatalog(q) {
     var inner = document.createElement('div');
     inner.className = 'cat-row-inner';
     inner.innerHTML =
-      '<div class="cr-cell cr-name" style="width:' + colWidths[0] + '">' + food.name + '</div>' +
-      '<div class="cr-cell cr-cal"  style="width:' + colWidths[1] + '">' + Math.round(food.cal) + '</div>' +
-      '<div class="cr-cell cr-pro"  style="width:' + colWidths[2] + '">' + Math.round(food.pro) + 'g</div>' +
-      '<div class="cr-cell cr-carb" style="width:' + colWidths[3] + '">' + Math.round(food.carb) + 'g</div>' +
-      '<div class="cr-cell cr-fat"  style="width:' + colWidths[4] + '">' + Math.round(food.fat) + 'g</div>' +
-      '<div class="cr-cell cr-num"  style="width:' + colWidths[5] + '">' + food.qty + '<span style="color:#C8BFCE;font-size:0.65em"> ' + food.unit + '</span></div>';
+      '<div class="cr-cell cr-name">' + food.name + '</div>' +
+      '<div class="cr-cell cr-cal">'  + Math.round(food.cal) + '</div>' +
+      '<div class="cr-cell cr-pro">'  + Math.round(food.pro) + 'g</div>' +
+      '<div class="cr-cell cr-carb">' + Math.round(food.carb) + 'g</div>' +
+      '<div class="cr-cell cr-fat">'  + Math.round(food.fat) + 'g</div>';
     rowDiv.appendChild(inner);
     catRowsDiv.appendChild(rowDiv);
     addCatalogSwipe(rowDiv, inner, idx);
@@ -1325,6 +1430,190 @@ document.getElementById('mf-save').addEventListener('click', function() {
 document.getElementById('mf-cancel').addEventListener('click', function() { closeModal('modal-food'); });
 
 // ─── ADD CATEGORY ─────────────────────────────────────────────────────────────
+// ─── MANAGE MEAL SECTIONS ────────────────────────────────────────────────────
+var _manageMealName = null;
+
+function renderMealListMgr() {
+  var mgr = document.getElementById('meal-list-mgr');
+  if (!mgr) return;
+  mgr.innerHTML = '';
+  var meals = getMeals();
+  for (var i=0; i<meals.length; i++) {
+    (function(m) {
+      var isDefault = DEFAULT_MEALS.indexOf(m) !== -1;
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #F5EFE6';
+      var lbl = document.createElement('span');
+      lbl.style.cssText = 'font-size:0.82rem;font-weight:600;color:#1A1A2E';
+      lbl.textContent = m;
+      row.appendChild(lbl);
+      if (!isDefault) {
+        var manBtn = document.createElement('button');
+        manBtn.style.cssText = 'background:none;border:1.5px solid #EDE5D8;border-radius:8px;padding:0.2rem 0.5rem;font-size:0.7rem;font-weight:700;color:#9A8FA8;cursor:pointer;font-family:inherit';
+        manBtn.textContent = '...';
+        manBtn.addEventListener('click', function() { openManageMeal(m); });
+        row.appendChild(manBtn);
+      } else {
+        var def = document.createElement('span');
+        def.style.cssText = 'font-size:0.62rem;color:#C8BFCE;font-weight:600';
+        def.textContent = 'default';
+        row.appendChild(def);
+      }
+      mgr.appendChild(row);
+    })(meals[i]);
+  }
+}
+
+function openManageMeal(name) {
+  _manageMealName = name;
+  document.getElementById('managemeal-title').textContent = 'Manage: ' + name;
+  document.getElementById('managemeal-name').value = name;
+  openModal('modal-managemeal');
+}
+
+document.getElementById('btn-add-meal').addEventListener('click', function() {
+  document.getElementById('newmeal-name').value = '';
+  openModal('modal-addmeal');
+});
+
+document.getElementById('newmeal-cancel').addEventListener('click', function() { closeModal('modal-addmeal'); });
+
+document.getElementById('newmeal-save').addEventListener('click', function() {
+  var name = document.getElementById('newmeal-name').value.trim();
+  if (!name) { toast('Enter a name', 'err'); return; }
+  var all = getMeals();
+  for (var i=0; i<all.length; i++) {
+    if (all[i].toLowerCase() === name.toLowerCase()) { toast('Already exists', 'err'); return; }
+  }
+  customMeals.push(name);
+  saveMeals();
+  closeModal('modal-addmeal');
+  populateMealSelects();
+  renderMealListMgr();
+  renderToday();
+  toast('"' + name + '" added', 'ok');
+});
+
+document.getElementById('managemeal-cancel').addEventListener('click', function() { closeModal('modal-managemeal'); });
+
+document.getElementById('managemeal-rename').addEventListener('click', function() {
+  var newName = document.getElementById('managemeal-name').value.trim();
+  if (!newName) { toast('Enter a name', 'err'); return; }
+  if (newName === _manageMealName) { closeModal('modal-managemeal'); return; }
+  var all = getMeals();
+  for (var i=0; i<all.length; i++) {
+    if (all[i].toLowerCase() === newName.toLowerCase() && all[i] !== _manageMealName) {
+      toast('Already exists', 'err'); return;
+    }
+  }
+  var idx = customMeals.indexOf(_manageMealName);
+  if (idx !== -1) customMeals[idx] = newName;
+  var dayKeys = Object.keys(data.days);
+  for (var di=0; di<dayKeys.length; di++) {
+    var log = data.days[dayKeys[di]].log || [];
+    for (var li=0; li<log.length; li++) {
+      if (log[li].meal === _manageMealName) log[li].meal = newName;
+    }
+  }
+  saveMeals(); save();
+  closeModal('modal-managemeal');
+  populateMealSelects(); renderMealListMgr(); renderToday();
+  toast('Renamed to "' + newName + '"', 'ok');
+});
+
+document.getElementById('managemeal-delete').addEventListener('click', function() {
+  var idx = customMeals.indexOf(_manageMealName);
+  if (idx !== -1) customMeals.splice(idx, 1);
+  var dayKeys = Object.keys(data.days);
+  for (var di=0; di<dayKeys.length; di++) {
+    var log = data.days[dayKeys[di]].log || [];
+    for (var li=log.length-1; li>=0; li--) {
+      if (log[li].meal === _manageMealName) log.splice(li, 1);
+    }
+  }
+  saveMeals(); save();
+  closeModal('modal-managemeal');
+  populateMealSelects(); renderMealListMgr(); renderToday();
+  toast('"' + _manageMealName + '" deleted', 'ok');
+});
+
+// ─── MANAGE CATEGORY ─────────────────────────────────────────────────────────
+var _manageCatName = null;
+
+function openManageCat(name) {
+  _manageCatName = name;
+  document.getElementById('managecat-title').textContent = 'Manage: ' + name;
+  document.getElementById('managecat-name').value = name;
+  openModal('modal-managecat');
+}
+
+document.getElementById('managecat-cancel').addEventListener('click', function() {
+  closeModal('modal-managecat');
+});
+
+document.getElementById('managecat-rename').addEventListener('click', function() {
+  var newName = document.getElementById('managecat-name').value.trim();
+  if (!newName) { toast('Enter a name', 'err'); return; }
+  if (newName === _manageCatName) { closeModal('modal-managecat'); return; }
+  var existing = getCats();
+  for (var i=0; i<existing.length; i++) {
+    if (existing[i].toLowerCase() === newName.toLowerCase() && existing[i] !== _manageCatName) {
+      toast('Name already exists', 'err'); return;
+    }
+  }
+  // Rename in customCats
+  var idx = customCats.indexOf(_manageCatName);
+  if (idx !== -1) customCats[idx] = newName;
+  // Update catalog items that use this category
+  for (var ci=0; ci<data.catalog.length; ci++) {
+    if (data.catalog[ci].cat === _manageCatName) data.catalog[ci].cat = newName;
+  }
+  // Update filter selection if needed
+  if (_catFilter === _manageCatName) _catFilter = newName;
+  saveCats(); save();
+  closeModal('modal-managecat');
+  populateCatSelect();
+  renderCatalog();
+  toast('Renamed to "' + newName + '"', 'ok');
+});
+
+document.getElementById('managecat-delete').addEventListener('click', function() {
+  var idx = customCats.indexOf(_manageCatName);
+  if (idx !== -1) customCats.splice(idx, 1);
+  // Move catalog items in this category to Other
+  for (var ci=0; ci<data.catalog.length; ci++) {
+    if (data.catalog[ci].cat === _manageCatName) data.catalog[ci].cat = 'Uncategorized';
+  }
+  if (_catFilter === _manageCatName) _catFilter = 'All';
+  saveCats(); save();
+  closeModal('modal-managecat');
+  populateCatSelect();
+  renderCatalog();
+  toast('"' + _manageCatName + '" deleted', 'ok');
+});
+
+// Catalog scan button - opens scanner in catalog-save mode
+document.getElementById('btn-cat-scan').addEventListener('click', function() {
+  _scanMode = 'catalog';
+  _scannedFood = null;
+  document.getElementById('scan-result').style.display    = 'none';
+  document.getElementById('scan-notfound').style.display  = 'none';
+  document.getElementById('sr-qty').value = '1';
+  setScanStatus('Initializing...');
+  openModal('modal-scan');
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    setScanStatus('Camera requires HTTPS. Deploy to Vercel to use scanning.', '#E8533A');
+    return;
+  }
+  if (_zxingLoaded) { startScanning(); return; }
+  setScanStatus('Loading scanner library...');
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js';
+  s.onload = function() { _zxingLoaded = true; startScanning(); };
+  s.onerror = function() { setScanStatus('Could not load scanner. Check your connection.', '#E8533A'); };
+  document.body.appendChild(s);
+});
+
 document.getElementById('newcat-save').addEventListener('click', function() {
   var name = document.getElementById('newcat-name').value.trim();
   if (!name) { toast('Enter a name', 'err'); return; }
@@ -1336,7 +1625,6 @@ document.getElementById('newcat-save').addEventListener('click', function() {
   saveCats();
   closeModal('modal-addcat');
   renderCatalog();
-  populateMealSelects();
   populateCatSelect();
   toast('"' + name + '" added', 'ok');
 });
@@ -1471,26 +1759,26 @@ function renderHistory() {
 function seed() {
   if (data.catalog.length > 0) return;
   data.catalog = [
-    { name:'Fish Oil',                         qty:2,   unit:'softgels', cat:'Supplements', cal:20,  fat:2,   carb:1,  pro:1,   notes:'' },
-    { name:'Nature Made Multivitamin Gummies',  qty:2,   unit:'gummies',  cat:'Supplements', cal:25,  fat:0,   carb:5,  pro:0,   notes:'' },
-    { name:'Nature Made ImmuneMAX Gummies',     qty:3,   unit:'gummies',  cat:'Supplements', cal:50,  fat:0,   carb:13, pro:0,   notes:'' },
-    { name:'Vital Proteins Collagen Peptides',  qty:1,   unit:'stick',    cat:'Supplements', cal:35,  fat:0,   carb:0,  pro:9,   notes:'' },
-    { name:'LMNT Drink Mix - Mango Chili',      qty:1,   unit:'stick',    cat:'Supplements', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'LMNT Sparkling Electrolyte',        qty:12,  unit:'oz',       cat:'Supplements', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'Fitaid - Fruit Punch',              qty:12,  unit:'oz',       cat:'Supplements', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
-    { name:'Pure Protein Shake - Almond Milk',  qty:1,   unit:'shake',    cat:'Breakfast',   cal:150, fat:5,   carb:7,  pro:20,  notes:'' },
-    { name:'Perfect Bars - Mini Dark Choc',     qty:2,   unit:'bars',     cat:'Breakfast',   cal:260, fat:16,  carb:18, pro:12,  notes:'' },
-    { name:'Eggo Protein Waffles - Choc Chip',  qty:2,   unit:'waffles',  cat:'Breakfast',   cal:180, fat:6,   carb:22, pro:10,  notes:'' },
-    { name:'Chicken Breast',                    qty:4,   unit:'oz',       cat:'Lunch',       cal:140, fat:3,   carb:0,  pro:26,  notes:'' },
-    { name:'Brown Rice',                        qty:0.5, unit:'cup',      cat:'Lunch',       cal:108, fat:0.9, carb:22, pro:2.5, notes:'' },
-    { name:'Boneless Skinless Chicken Thigh',   qty:5.5, unit:'oz',       cat:'Dinner',      cal:220, fat:11,  carb:0,  pro:30,  notes:'' },
-    { name:'Goodles - Dreamy Creamy',           qty:75,  unit:'g',        cat:'Dinner',      cal:280, fat:5,   carb:46, pro:14,  notes:'' },
-    { name:'High Tide THC Drink',               qty:12,  unit:'oz',       cat:'Snacks',      cal:25,  fat:0,   carb:7,  pro:0,   notes:'' },
-    { name:'Bucked Up Carbonated Protein',      qty:16,  unit:'oz',       cat:'Snacks',      cal:100, fat:0,   carb:0,  pro:25,  notes:'' },
-    { name:'Oikos Pro Yogurt - Peach',          qty:1,   unit:'bottle',   cat:'Snacks',      cal:140, fat:1.5, carb:8,  pro:23,  notes:'' },
-    { name:'Power Crunch Protein Crisps',       qty:1,   unit:'can',      cat:'Snacks',      cal:320, fat:21,  carb:12, pro:22,  notes:'' },
-    { name:'Grapes',                            qty:21,  unit:'grapes',   cat:'Snacks',      cal:71,  fat:0,   carb:19, pro:1,   notes:'' },
-    { name:'Red Wine',                          qty:5,   unit:'oz',       cat:'Alcohol',     cal:125, fat:0,   carb:4,  pro:0,   notes:'' }
+    { name:'Fish Oil',                         qty:2,   unit:'softgels', cat:'Uncategorized', cal:20,  fat:2,   carb:1,  pro:1,   notes:'' },
+    { name:'Nature Made Multivitamin Gummies',  qty:2,   unit:'gummies',  cat:'Uncategorized', cal:25,  fat:0,   carb:5,  pro:0,   notes:'' },
+    { name:'Nature Made ImmuneMAX Gummies',     qty:3,   unit:'gummies',  cat:'Uncategorized', cal:50,  fat:0,   carb:13, pro:0,   notes:'' },
+    { name:'Vital Proteins Collagen Peptides',  qty:1,   unit:'stick',    cat:'Uncategorized', cal:35,  fat:0,   carb:0,  pro:9,   notes:'' },
+    { name:'LMNT Drink Mix - Mango Chili',      qty:1,   unit:'stick',    cat:'Uncategorized', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
+    { name:'LMNT Sparkling Electrolyte',        qty:12,  unit:'oz',       cat:'Uncategorized', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
+    { name:'Fitaid - Fruit Punch',              qty:12,  unit:'oz',       cat:'Uncategorized', cal:5,   fat:0,   carb:1,  pro:0,   notes:'' },
+    { name:'Pure Protein Shake - Almond Milk',  qty:1,   unit:'shake',    cat:'Uncategorized',   cal:150, fat:5,   carb:7,  pro:20,  notes:'' },
+    { name:'Perfect Bars - Mini Dark Choc',     qty:2,   unit:'bars',     cat:'Uncategorized',   cal:260, fat:16,  carb:18, pro:12,  notes:'' },
+    { name:'Eggo Protein Waffles - Choc Chip',  qty:2,   unit:'waffles',  cat:'Uncategorized',   cal:180, fat:6,   carb:22, pro:10,  notes:'' },
+    { name:'Chicken Breast',                    qty:4,   unit:'oz',       cat:'Uncategorized',       cal:140, fat:3,   carb:0,  pro:26,  notes:'' },
+    { name:'Brown Rice',                        qty:0.5, unit:'cup',      cat:'Uncategorized',       cal:108, fat:0.9, carb:22, pro:2.5, notes:'' },
+    { name:'Boneless Skinless Chicken Thigh',   qty:5.5, unit:'oz',       cat:'Uncategorized',      cal:220, fat:11,  carb:0,  pro:30,  notes:'' },
+    { name:'Goodles - Dreamy Creamy',           qty:75,  unit:'g',        cat:'Uncategorized',      cal:280, fat:5,   carb:46, pro:14,  notes:'' },
+    { name:'High Tide THC Drink',               qty:12,  unit:'oz',       cat:'Uncategorized',      cal:25,  fat:0,   carb:7,  pro:0,   notes:'' },
+    { name:'Bucked Up Carbonated Protein',      qty:16,  unit:'oz',       cat:'Uncategorized',      cal:100, fat:0,   carb:0,  pro:25,  notes:'' },
+    { name:'Oikos Pro Yogurt - Peach',          qty:1,   unit:'bottle',   cat:'Uncategorized',      cal:140, fat:1.5, carb:8,  pro:23,  notes:'' },
+    { name:'Power Crunch Protein Crisps',       qty:1,   unit:'can',      cat:'Uncategorized',      cal:320, fat:21,  carb:12, pro:22,  notes:'' },
+    { name:'Grapes',                            qty:21,  unit:'grapes',   cat:'Uncategorized',      cal:71,  fat:0,   carb:19, pro:1,   notes:'' },
+    { name:'Red Wine',                          qty:5,   unit:'oz',       cat:'Uncategorized',     cal:125, fat:0,   carb:4,  pro:0,   notes:'' }
   ];
   save();
 }
@@ -1645,20 +1933,20 @@ function buildScannedLogEntry(meal) {
 
 document.getElementById('sr-log-only').addEventListener('click', function() {
   if (!_scannedFood) return;
-  getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
-  save();
-  stopScanner();
-  closeModal('modal-scan');
-  closeModal('modal-log');
-  renderToday();
-  toast('Added to log!', 'ok');
-  // Show preview in scan tab in case user reopens log modal
-  populateScanLogPreview();
+  if (_scanMode === 'catalog') {
+    saveScannedToCatalog();
+    stopScanner(); closeModal('modal-scan'); renderCatalog();
+  } else {
+    getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
+    save();
+    stopScanner(); closeModal('modal-scan'); closeModal('modal-log');
+    renderToday(); toast('Added to log!', 'ok');
+    populateScanLogPreview();
+  }
 });
 
 document.getElementById('sr-save-and-log').addEventListener('click', function() {
   if (!_scannedFood) return;
-  // Check for duplicate in catalog
   var exists = false;
   for (var i = 0; i < data.catalog.length; i++) {
     if (data.catalog[i].name.toLowerCase() === _scannedFood.name.toLowerCase()) { exists = true; break; }
@@ -1666,18 +1954,20 @@ document.getElementById('sr-save-and-log').addEventListener('click', function() 
   if (!exists) {
     data.catalog.push({
       name: _scannedFood.name, qty: 1, unit: _scannedFood.servingSize,
-      cat: 'Other', cal: _scannedFood.cal, fat: _scannedFood.fat,
+      cat: 'Uncategorized', cal: _scannedFood.cal, fat: _scannedFood.fat,
       carb: _scannedFood.carb, pro: _scannedFood.pro, notes: _scannedFood.brand
     });
+    save();
   }
-  getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
-  save();
-  stopScanner();
-  closeModal('modal-scan');
-  closeModal('modal-log');
-  renderToday();
-  toast(exists ? 'Added to log!' : 'Saved to catalog + added!', 'ok');
-  populateScanLogPreview();
+  if (_scanMode === 'catalog') {
+    stopScanner(); closeModal('modal-scan'); renderCatalog();
+    toast(exists ? 'Already in catalog' : 'Saved to catalog!', 'ok');
+  } else {
+    getDay(viewingDate).log.push(buildScannedLogEntry(_scanMeal));
+    save(); stopScanner(); closeModal('modal-scan'); closeModal('modal-log');
+    renderToday(); toast(exists ? 'Added to log!' : 'Saved to catalog + added!', 'ok');
+    populateScanLogPreview();
+  }
 });
 
 document.getElementById('sr-scan-again').addEventListener('click', function() {
@@ -1721,170 +2011,44 @@ document.getElementById('slp-qty').addEventListener('change', function() {
   if (_scannedFood) populateScanLogPreview();
 });
 
-// ─── SWIPE GESTURES ──────────────────────────────────────────────────────────
-var SWIPE_THRESHOLD = 40;  // px needed to trigger reveal
-var SWIPE_REVEAL    = 72;  // px to reveal action panel
-var _activeSwipe    = null; // currently open swipe row
 
-function resetSwipe(rowEl) {
-  rowEl.style.transition = 'transform 0.2s ease';
-  rowEl.style.transform  = 'translateX(0)';
-}
-
-function closeAllSwipes(except) {
-  if (_activeSwipe && _activeSwipe !== except) {
-    resetSwipe(_activeSwipe);
-    _activeSwipe = null;
-  }
-}
-
-// Log card swipe (swipe right = edit, swipe left = delete)
-function addLogSwipe(card, rowEl, editEl, delEl, idx, day) {
-  var REVEAL = 72;
-  var startX = 0, startY = 0, curX = 0, dragging = false, isOpen = false, openDir = null;
-
-  // Initially hide action panels (they live behind rowEl which covers them)
-  editEl.style.display = 'flex';
-  delEl.style.display  = 'flex';
-
-  function snapBack() {
-    rowEl.style.transition = 'transform 0.2s ease';
-    rowEl.style.transform  = 'translateX(0)';
-    isOpen = false; openDir = null;
-    if (_activeSwipe === card) _activeSwipe = null;
-  }
-
-  card.addEventListener('touchstart', function(e) {
-    // Close other open rows
-    if (_activeSwipe && _activeSwipe !== card) {
-      var otherRow = _activeSwipe.querySelector('.log-row');
-      if (otherRow) { otherRow.style.transition='transform 0.2s ease'; otherRow.style.transform='translateX(0)'; }
-      _activeSwipe = null;
-    }
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    curX = 0; dragging = true;
-    rowEl.style.transition = 'none';
-  }, { passive: true });
-
-  card.addEventListener('touchmove', function(e) {
-    if (!dragging) return;
-    var dx = e.touches[0].clientX - startX;
-    var dy = e.touches[0].clientY - startY;
-    if (Math.abs(dy) > Math.abs(dx) + 8) { dragging = false; snapBack(); return; }
-    e.preventDefault();
-    curX = Math.max(-REVEAL, Math.min(REVEAL, dx));
-    rowEl.style.transform = 'translateX(' + curX + 'px)';
-  }, { passive: false });
-
-  card.addEventListener('touchend', function() {
-    if (!dragging) return;
-    dragging = false;
-    if (curX > 30) {
-      rowEl.style.transition = 'transform 0.2s ease';
-      rowEl.style.transform  = 'translateX(' + REVEAL + 'px)';
-      isOpen = true; openDir = 'edit'; _activeSwipe = card;
-    } else if (curX < -30) {
-      rowEl.style.transition = 'transform 0.2s ease';
-      rowEl.style.transform  = 'translateX(-' + REVEAL + 'px)';
-      isOpen = true; openDir = 'del'; _activeSwipe = card;
-    } else {
-      snapBack();
-    }
-  });
-
-  rowEl.addEventListener('click', function() { if (isOpen) snapBack(); });
-
-  editEl.addEventListener('click', function() {
-    snapBack();
-    openEditLogModal(idx);
-  });
-
-  delEl.addEventListener('click', function() {
-    day.log.splice(idx, 1);
-    save(); renderToday(); toast('Removed');
-  });
-}
-
-// Catalog row swipe (swipe right = edit, swipe left = delete)
+// Catalog row: tap to expand
 function addCatalogSwipe(rowDiv, inner, idx) {
-  var REVEAL = 72;
-  var startX = 0, startY = 0, curX = 0, dragging = false, isOpen = false;
+  // Build expand panel
+  var expand = document.createElement('div');
+  expand.className = 'cat-row-expand';
+  var food = data.catalog[idx];
+  expand.innerHTML =
+    '<div class="cat-expand-macros">' +
+      '<span style="color:#1A1A2E;font-weight:800">' + Math.round(food.cal) + ' kcal</span>' +
+      '<span style="color:#4A7CF6;font-weight:700">P ' + Math.round(food.pro) + 'g</span>' +
+      '<span style="color:#F5A623;font-weight:700">C ' + Math.round(food.carb) + 'g</span>' +
+      '<span style="color:#27AE60;font-weight:700">F ' + Math.round(food.fat) + 'g</span>' +
+      '<span style="color:#9A8FA8">' + food.qty + ' ' + food.unit + '</span>' +
+    '</div>' +
+    '<div class="cat-expand-acts">' +
+      '<button class="cat-expand-btn edit">' + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' + '</button>' +
+      '<button class="cat-expand-btn del">'  + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8533A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>' + '</button>' +
+    '</div>';
+  rowDiv.appendChild(expand);
 
-  // Build action panels inside rowDiv (position:absolute works in a div)
-  var editPanel = document.createElement('div');
-  editPanel.className = 'cat-swipe-edit';
-  editPanel.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-
-  var delPanel = document.createElement('div');
-  delPanel.className = 'cat-swipe-del';
-  delPanel.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
-
-  rowDiv.appendChild(editPanel);
-  rowDiv.appendChild(delPanel);
-
-  function snapBack() {
-    inner.style.transition = 'transform 0.2s ease';
-    inner.style.transform  = 'translateX(0)';
-    isOpen = false;
-    if (_activeSwipe === rowDiv) _activeSwipe = null;
-  }
-
-  function snapOpen(dir) {
-    inner.style.transition = 'transform 0.2s ease';
-    inner.style.transform  = 'translateX(' + (dir === 'edit' ? REVEAL : -REVEAL) + 'px)';
-    isOpen = true;
-    _activeSwipe = rowDiv;
-  }
-
-  rowDiv.addEventListener('touchstart', function(e) {
-    // Close any other open row
-    if (_activeSwipe && _activeSwipe !== rowDiv) {
-      var prev = _activeSwipe.querySelector('.cat-row-inner');
-      if (prev) { prev.style.transition='transform 0.2s ease'; prev.style.transform='translateX(0)'; }
-      _activeSwipe = null;
-    }
-    startX   = e.touches[0].clientX;
-    startY   = e.touches[0].clientY;
-    curX     = 0;
-    dragging = true;
-    inner.style.transition = 'none';
-  }, { passive: true });
-
-  rowDiv.addEventListener('touchmove', function(e) {
-    if (!dragging) return;
-    var dx = e.touches[0].clientX - startX;
-    var dy = e.touches[0].clientY - startY;
-    // If scrolling vertically, cancel swipe
-    if (Math.abs(dy) > Math.abs(dx) + 8) { dragging = false; snapBack(); return; }
-    e.preventDefault();
-    curX = Math.max(-REVEAL, Math.min(REVEAL, dx));
-    inner.style.transform = 'translateX(' + curX + 'px)';
-  }, { passive: false });
-
-  rowDiv.addEventListener('touchend', function() {
-    if (!dragging) return;
-    dragging = false;
-    if (curX > 30) {
-      snapOpen('edit');
-    } else if (curX < -30) {
-      snapOpen('del');
-    } else {
-      snapBack();
-    }
-  });
-
-  // Tap on row when open → close
+  // Tap row to expand/collapse
   inner.addEventListener('click', function() {
-    if (isOpen) { snapBack(); }
+    var isExp = rowDiv.classList.contains('expanded');
+    // Close any other expanded catalog row
+    var allExp = document.querySelectorAll('.cat-row.expanded');
+    for (var ae=0; ae<allExp.length; ae++) allExp[ae].classList.remove('expanded');
+    if (!isExp) rowDiv.classList.add('expanded');
   });
 
-  editPanel.addEventListener('click', function() {
-    snapBack();
+  expand.querySelector('.cat-expand-btn.edit').addEventListener('click', function(e) {
+    e.stopPropagation();
+    rowDiv.classList.remove('expanded');
     openFoodModal(idx);
   });
 
-  delPanel.addEventListener('click', function() {
+  expand.querySelector('.cat-expand-btn.del').addEventListener('click', function(e) {
+    e.stopPropagation();
     data.catalog.splice(idx, 1);
     save(); renderCatalog(); toast('Deleted');
   });
